@@ -1,1 +1,0 @@
-package hallo_world_go
