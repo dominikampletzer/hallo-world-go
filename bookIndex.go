@@ -18,6 +18,6 @@ func CreateIndex(book Book) Index {
 	return index
 }
 
-func (Index) String() {
-	// TODO
+func (i Index) String() string {
+	return "TODO implement Strin gfor BookIndex"
 }
