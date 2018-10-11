@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func swap0(x *int, y *int) {
+func swap0(x *int, y *int) { // ändert pointer
 	*x, *y = *y, *x
 }
 func swap1(x **int, y **int) {
