@@ -1,10 +1,11 @@
-package main
+package hello
 
 import (
 	"fmt"
+	"testing"
 )
 
-func ExampleSwap() {
+func TestSwap(t *testing.T) {
 	var a, b = 1, 2
 	swap0(&a, &b)
 	if !(a == 2) || !(b == 1) {

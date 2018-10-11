@@ -1,4 +1,4 @@
-package main
+package hello
 
 import "fmt"
 
@@ -20,7 +20,7 @@ var a = 1
 
 var b = 2
 
-func main() {
+func nix() {
 
 	fmt.Println("start", a, b)
 	swap0(&a, &b)
