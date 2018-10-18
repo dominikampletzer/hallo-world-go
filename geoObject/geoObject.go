@@ -12,12 +12,12 @@ type Painter interface {
 }
 
 type GeoObject struct {
-	Position
+	point Position
 	color int
 }
 
 func (geoObject GeoObject) Paint() {
-	fmt.Printf("GeoObject: x: %v, y: %v, color: %v \n", geoObject.x, geoObject.y, geoObject.color)
+	fmt.Printf("GeoObject: x: %v, y: %v, color: %v \n", geoObject.point.x, geoObject.point.y, geoObject.color)
 }
 
 type Circle struct {
@@ -26,7 +26,7 @@ type Circle struct {
 }
 
 func (circle Circle) Paint() {
-	fmt.Printf("Circle: x: %v, y: %v, color: %v, radius: %v \n", circle.x, circle.y, circle.color, circle.radius)
+	fmt.Printf("Circle: x: %v, y: %v, color: %v, radius: %v \n", circle.point.x, circle.point.y, circle.color, circle.radius)
 
 }
 
@@ -37,7 +37,7 @@ type Rectangle struct {
 }
 
 func (rec Rectangle) Paint() {
-	fmt.Printf("Rectangle: x:%v, y:%v, color:%v, width:%v, height:%v \n", rec.x, rec.y, rec.color, rec.width, rec.height)
+	fmt.Printf("Rectangle: x:%v, y:%v, color:%v, width:%v, height:%v \n", rec.point.x, rec.point.y, rec.color, rec.width, rec.height)
 }
 
 type Triangle struct {
@@ -49,7 +49,7 @@ type Triangle struct {
 
 func (tri Triangle) Paint() {
 	fmt.Printf("Triangle: x: %v, y: %v, color: %v, posA: (x:%v,y:%v),  posB: (x:%v,y:%v),  posC: (x:%v,y:%v) \n",
-		tri.x, tri.y, tri.color,
+		tri.point.x, tri.point.y, tri.color,
 		tri.posA.x, tri.posA.y,
 		tri.posB.x, tri.posB.y,
 		tri.posC.x, tri.posC.y)
