@@ -1,4 +1,4 @@
-package hello
+package stack
 
 import (
 	"testing"

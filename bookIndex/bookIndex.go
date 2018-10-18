@@ -1,4 +1,6 @@
-package hello
+package bookIndex
+
+import "fmt"
 
 type Page []string
 
@@ -19,5 +21,9 @@ func CreateIndex(book Book) Index {
 }
 
 func (i Index) String() string {
-	return "TODO implement Strin gfor BookIndex"
+	result := ""
+	for k, v := range i {
+		result += fmt.Sprintf("\n\tWord: %v : Pages: %v", k, v)
+	}
+	return result + "\n"
 }
