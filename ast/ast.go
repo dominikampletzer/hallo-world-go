@@ -6,11 +6,12 @@ type Node interface {
 
 type Var struct {
 	name string
-	bool
+	//bool
 }
 
-func (val Var) Eval() bool {
-	return val.bool
+func (val Var) Eval(vars map[string]bool) bool {
+	return vars[val.name]
+	//return val.bool
 }
 
 type And struct {
