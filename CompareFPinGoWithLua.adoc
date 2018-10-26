@@ -1,0 +1,9 @@
+= Compare Functional Programming in Go with Lua
+
+- History of Lua / What is Lua?
+- Main Concepts of Lua
+- Functional Programming in Lua
+- Functional Programming in Go
+- Differences by Examples
+
+erstmal rausfinden wie es in Go geht :)
