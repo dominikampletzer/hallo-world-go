@@ -7,3 +7,7 @@
 - Differences by Examples
 
 erstmal rausfinden wie es in Go geht :)
+
+
+== CHEAT Sheet
+https://powerman.name/doc/asciidoc
