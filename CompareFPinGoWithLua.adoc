@@ -1,13 +1,244 @@
 = Compare Functional Programming in Go with Lua
 
-- History of Lua / What is Lua?
-- Main Concepts of Lua
+- What is Lua?
+- Comparison Go vs Lua - Structure and Features
 - Functional Programming in Lua
-- Functional Programming in Go
 - Differences by Examples
 
 erstmal rausfinden wie es in Go geht :)
 
 
+= What is Lua?
+
+Lua is a Programming Language which was released, designed, implemented and maintained 1993 by PUC-Rio,
+the Pontifical Catholic University of Rio de Janeiro in Brazil. Till Version 4 it was under the
+BSD-Licence since Version 5 its under MIT-Licence.
+
+Lua creators call it a powerful, efficient, lightweight, embeddable scripting language.
+It supports procedural programming, object-oriented programming, functional programming,
+data-driven programming, and data description.
+
+This sounds nice, but for which use cases are Lua made, or why choose Lua?
+
+Lua is very small and embeddable. It has a small footprint and can embed easily into every platform
+with a standard C compiler. It is currently the leading scripting language in video games. (for Example:
+World of Warcraft or Angry birds)
+
+First Lua is implemented as a library
+
+Designed for embedding and extending
+
+== Goals of Lua
+
+- Portability: Runs on most platforms we ever heard of, Runs inside OS kernels, Written in ANSI C
+- Simplicity: Well documented C Api and free Manual 100 pages (proxy for complexity)
+- Small size
+- Scripting: dynamic Language - scripting emphasizes inter-language communication;
+Program written in two languages; System Language implements the hard parts of the application - scripting glues
+together the hard parts
+
+= Comparison Go vs Lua - Structure and Features
+
+|===
+|Feature |Go |Lua
+
+|Multiple Projects
+|Yes
+|Yes
+
+|Target audience
+|Cloud computing, Web Development, App developer, Distributed Systems, Embedded system, Systems Programming
+|Embedded system, Game developer industry
+
+|Release Date
+|2009
+|1993
+
+|Typing
+|Static
+|Dynamic
+
+|Programming paradigm
+|Concurrency Oriented, Object-oriented, Imperative programming, reflective
+|Imperative programming, Object-oriented, Functional, Metaprogramming
+
+|Supported VCS
+|Any
+|Git
+
+|Embeddable
+|Yes
+|Yes
+
+|Asynchronously
+|Go-Routines, Channels + Locks
+|Coroutines
+
+|Exception Handling
+|panic/recover
+|Yes, Lua ends the current chunk and returns to the application pcall (like try/catch)
+
+|Public/Private
+|Implicit by default by Spelling/Writing
+|Privacy by Local Variables or keep Objects/Tables in Closure
+
+|Objects
+|By Embedding and throu interfaces
+|Tables
+
+|Inheritance
+|Multiple by Interfaces
+|Multiple Prototyping
+
+|===
+
+= Scope / Values References / Functions
+
+go auf lexical scoping überprüfen
+
+== Function Nested
+    function foo(x)
+        function p(y)
+            print(y)
+        end
+        p(2*x)
+    end
+
+== anonymous Functions
+    add = (function (x,y) return x+y end)
+
+Functions are First-Class Values
+Functions can be stored in variables and data structures
+Can be passed as arguments to and returned by other functions (higher-order functions)
+They can called anywhere in a program
+
+== Lexical Scoping
+
+Unlike global variables, local variables have their scope limited to the block where they are
+declared. A block is the body of a control structure, the body of a function, or a chunk
+(the file or string with the code where the variable is declared).
+
+That is the same as for functions, so we could create typical closures like
+
+ function sequence ()
+      local i = 0
+      return function ()
+               i ++
+               return i
+             end
+ end
+
+= importing of Modules
+lua
+
+    local m = require "math"
+    print(m.sqrt(10))
+
+maybe to dynamic you cant check if there really math. there could be every expression
+
+go
+
+    import "fmt"
+
+== eval
+
+lua doesnt have eval function like js it has a load function (historical reason)
+load separated compilation from execution
+load is a pure function
+any code always runs inside some function
+
+- we can declare local variables which naturally work like static variables for the functions inside the chunk
+- chunks can return values
+
+    function eval (code)
+        -- compiles source 'code' and executes the result
+        return load(code)()
+    end
+
+= Call By Reference/Pointer
+
+= Closures
+ function sequence ()
+      local i = 0
+      return function ()
+               i ++
+               return i
+             end
+    end
+
+
+= generic for
+ for k, v in pairs(t) do
+    print(k, v)
+ end
+
+ for <var-list> in <exp-list> do
+      <body>
+  end
+
+https://www.lua.org/pil/7.1.html
+
+= Interfaces?? / Objects
+first-class functions + tables ~ objects
+syntactical sugar for methods - handles self
+
+a:foo(x) => a.foo(a,x)
+
+    function a:foo(x)
+        ...
+    end
+
+=>
+
+    a.foo = function(self,x)
+        ...
+    end
+
+= Asynchrounes /Synchrones
+
+= Routinen vs Coroutines
+
+= Exception handling
+lua
+anonymous functison wiht lexical scoping again error handling could use variables form current function usw.
+simple semantic you need only 2 functions
+simple to interface with other languages
+
+bad
+verbose
+body cannot return/break
+try is not cost-free (but not very expencive)
+
+
+    local ok, err = pcall(function() <block/error> end) -- protacted Call
+
+    if not ok then
+        <exception code>
+    end
+
+TODO try catch von go einsetzten und alles beschreiben
+
+= Dynamic vs Static Typing
+
 == CHEAT Sheet
+
 https://powerman.name/doc/asciidoc
+
+== Talk about LUA Functions
+
+https://www.youtube.com/watch?v=wdRGOE1N-FA
+
+https://pragprog.com/magazines/2013-05/a-functional-introduction-to-lua
+https://www.lua.org/pil/6.html
+
+
+http://vschart.com/compare/lua/vs/go-language
+
+lua
+
+dynamic Typing
+kein Safe Casting
+kein Static Typing
+Object orientierte Models
+
+https://www.lua.org/about.html
