@@ -86,6 +86,14 @@ together the hard parts
 |By Embedding and throu interfaces
 |Tables
 
+|Interfaces
+|Yes
+|No
+
+|Compiled
+|Yes
+|Yes
+
 |Inheritance
 |Multiple by Interfaces
 |Multiple Prototyping
@@ -155,8 +163,6 @@ any code always runs inside some function
         return load(code)()
     end
 
-= Call By Reference/Pointer
-
 = Closures
  function sequence ()
       local i = 0
@@ -179,6 +185,22 @@ any code always runs inside some function
 https://www.lua.org/pil/7.1.html
 
 = Interfaces?? / Objects
+
+The table type implements associative arrays. An associative array is an array that can be indexed not only with numbers,
+ but also with strings or any other value of the language, except nil. Moreover, tables have no fixed size; you can add
+ as many elements as you want to a table dynamically. Tables are the main (in fact, the only) data structuring mechanism
+  in Lua, and a powerful one. We use tables to represent ordinary arrays, symbol tables, sets, records, queues, and
+  other data structures, in a simple, uniform, and efficient way. Lua uses tables to represent packages as well. When we
+   write io.read, we mean "the read entry from the io package". For Lua, that means "index the table io using the string
+    "read" as the key".
+
+Tables in Lua are neither values nor variables; they are objects. If you are familiar with arrays in Java or Scheme,
+then you have a fair idea of what we mean. However, if your idea of an array comes from C or Pascal, you have to open
+your mind a bit. You may think of a table as a dynamically allocated object; your program only manipulates references
+(or pointers) to them. There are no hidden copies or creation of new tables behind the scenes. Moreover, you do not have
+ to declare a table in Lua; in fact, there is no way to declare one. You create tables by means of a constructor
+  expression, which in its simplest form is written as {}:
+
 first-class functions + tables ~ objects
 syntactical sugar for methods - handles self
 
@@ -194,14 +216,156 @@ a:foo(x) => a.foo(a,x)
         ...
     end
 
-= Asynchrounes /Synchrones
+Lua doesn´t need Interfaces in the usual meaning. An interface says that an Object which includes an Interface has specific
+functions, methods or properties. But in Lua there are no Objects like in Java. But OO Programming way is possible if
+functions and tables are seen as an Object
 
-= Routinen vs Coroutines
+= Asynchrounes /Synchrones Routinen vs Coroutines
+A coroutine is similar to a thread (in the sense of multithreading): a line of execution, with its own stack, its own
+local variables, and its own instruction pointer; but sharing global variables and mostly anything else with other
+ coroutines. The main difference between threads and coroutines is that, conceptually (or literally, in a multiprocessor
+  machine), a program with threads runs several threads concurrently. Coroutines, on the other hand, are collaborative:
+   A program with coroutines is, at any given time, running only one of its coroutines and this running coroutine only
+    suspends its execution when it explicitly requests to be suspended.
+
+Coroutine is a powerful concept. As such, several of its main uses are complex. Do not worry if you do not understand
+some of the examples in this chapter on your first reading. You can read the rest of the book and come back here later.
+ But please come back. It will be time well spent.
+(zusammenstampfen. alles geklaut)
+
+coroutine has 3 states: suspended, running, dead
+it can stores in a variable and like:
+
+    co = coroutine.create(function ()
+           for i=1,10 do
+             print("co", i)
+             coroutine.yield()
+           end
+         end)
+
+Now, when we resume this coroutine, it starts its execution and runs until the first yield:
+
+    coroutine.resume(co)    --> co   1
+
+If we check its status, we can see that the coroutine is suspended and therefore can be resumed again:
+
+    print(coroutine.status(co))   --> suspended
+
+This can be done till the for-loop is ending. than the state of the coroutine is dead. and it could not longer be called
+without an exception.
+
+coroutines are a kind of collaborative multithreading. there a not constructed as real multithreading like go-routines.
+While a coroutine is running, it cannot be stopped from the outside
+However, with non-preemptive multithreading, whenever any thread calls a blocking operation, the whole program blocks
+until the operation completes.
+
+for exsacmple downloading different files trou http. it could be downloaded in sequence (tooks a long time)
+or is there currently no data available the coroutines could yield and another coroutine could run and so own.
+
+ function download (host, file)
+      local c = assert(socket.connect(host, 80))
+      local count = 0    -- counts number of bytes read
+      c:send("GET " .. file .. " HTTP/1.0\r\n\r\n")
+      while true do
+        local s, status = receive(c)
+        count = count + string.len(s)
+        if status == "closed" then break end
+      end
+      c:close()
+      print(file, count)
+    end
+
+    function receive (connection)
+      connection:timeout(0)   -- do not block
+      local s, status = connection:receive(2^10)
+      if status == "timeout" then
+        coroutine.yield(connection)
+      end
+      return s, status
+    end
+
+The next function ensures that each download runs in an individual thread:
+
+    threads = {}    -- list of all live threads
+    function get (host, file)
+      -- create coroutine
+      local co = coroutine.create(function ()
+        download(host, file)
+      end)
+      -- insert it in the list
+      table.insert(threads, co)
+    end
+
+
+= Pointers?
+Lua doesn´t offer Pointers (of course internal it uses references to memory) depending on the data-type there were
+reference or values copied. Lua handles allocation and deallocation of strungs and other objects
+
+ Or as some people like to put it; all types are passed by value, but function, table, userdata and thread are reference types.
+
+string is also a kind of reference type, but is immutable, interned and copy-on-write - it behaves like a value type,
+but with better performance.
+
+Go does offer Pointer to give the developer full control
+
+= Map/Reducer sample
+
+The "canonical" example of a function that takes another function as a parameter is map. Unfortunately map does not come with Lua, so we'll have to code it ourselves.
+
+function map(func, array)
+  local new_array = {}
+  for i,v in ipairs(array) do
+    new_array[i] = func(v)
+  end
+  return new_array
+end
+
+This is a simple map implementation that only works with one array. But it works well:
+
+> return table.concat(map(double, {1,2,3}),",")
+2,4,6
+
+A more complex map implementation that works with more than one array is possible:
+
+function mapn(func, ...)
+  local new_array = {}
+  local i=1
+  local arg_length = table.getn(arg)
+  while true do
+    local arg_list = map(function(arr) return arr[i] end, arg)
+    if table.getn(arg_list) < arg_length then return new_array end
+    new_array[i] = func(unpack(arg_list))
+    i = i+1
+  end
+end
+
+
+REDUCER
+function foldr(func, val, tbl)
+     for i,v in pairs(tbl) do
+         val = func(val, v)
+     end
+     return val
+ end
+
+ -- reduce(function, table)
+ -- e.g: reduce(operator.add, {1,2,3,4}) -> 10
+ function reduce(func, tbl)
+     return foldr(func, head(tbl), tail(tbl))
+ end
+
+ The pairs function, which iterates over all elements in a table, is similar, except that the iterator function is the next function, which is a primitive function in Lua:
+
+     function pairs (t)
+       return next, t, nil
+     end
+
+
 
 = Exception handling
 lua
 anonymous functison wiht lexical scoping again error handling could use variables form current function usw.
-simple semantic you need only 2 functions
+simple semantic you need only 2 functions - there you could see how functional programming is a major part of lua.
 simple to interface with other languages
 
 bad
@@ -219,6 +383,58 @@ try is not cost-free (but not very expencive)
 TODO try catch von go einsetzten und alles beschreiben
 
 = Dynamic vs Static Typing
+
+One of the Biggest differences are the typing between Lua and Go.
+Lua is dynamic typed and Go static typed.
+Dynamic vs Static Typing fills a lot of blogs and posts in web also in papers and so on...
+Both have its pro´s and con´s so we wont discuss theme here only take a look at them and show the consequences of these
+in exsamples
+
+== Assignment
+
+Lua as Go allows multiple assingment like:
+
+    a,b = 1,2
+
+these allows to swap without a swap function
+
+    a,b = b,a
+
+with this aprouch you resive multiple return values
+
+    a,b = f()
+
+a will get the first result b the second one
+
+with dynamic typing you could but different values into one variable (of course not in the same time)
+
+    a = 1
+    a = "eins"
+    a = f()
+    ...
+
+by static typing in go this is not possible
+
+    a,b = 1,2  -- will work. go "knows" that a and b are integers
+    a = "eins" -- will throw an exception. TypeError
+
+casts must done explicitly like
+
+    arr_1 := []any{2, 3, 4}
+    a = 1
+    a = a + arr_1[0].(int)
+    or
+    arr_2:= []int{1, 2, 3}
+    b = 2 + arr_2[0]
+
+should variables be declared befor use they must also declared with typing
+
+    b int
+    c string
+    a = 1 -- works fine
+    b = 2 -- will also work
+    c = 3 -- will occure an error
+
 
 == CHEAT Sheet
 
@@ -242,3 +458,9 @@ kein Static Typing
 Object orientierte Models
 
 https://www.lua.org/about.html
+
+Quellen
+https://www.lua.org
+https://www.youtube.com/watch?v=wdRGOE1N-FA (Talk von LUA in Moskau by Roberto Ierusalimschy)
+http://vschart.com/compare/lua/vs/go-language
+Programming in Lua by Roberto Ierusalimschy, Lua.org, December 2003
