@@ -427,7 +427,7 @@ casts must done explicitly like
     arr_2:= []int{1, 2, 3}
     b = 2 + arr_2[0]
 
-should variables be declared befor use they must also declared with typing
+should variables be declared before use they must also declared with typing
 
     b int
     c string
@@ -435,32 +435,68 @@ should variables be declared befor use they must also declared with typing
     b = 2 -- will also work
     c = 3 -- will occure an error
 
+This will also effect Function declarations
+Go
+
+    func foo (a string, b int) string{
+        return "Some Value"
+    }
+
+    type Any interface{}
+    func foo_2(a Any, b Any) Any{
+        x string
+        b int
+        x = a.(string)
+        y = b.(int)
+        return "Some Value"
+    }
+    result string
+    result = foo_2("Some", 2).(string)
+
+
+these example shows that the function params could only be string for a and an integer for b. Foo
+must return a string. In the second example you have to cast the params and return value to fit
+the correct type.
+Main benefit is that you use always the correct type and at last during compiling errors will occured
+and during runtime. This prevents for deploy errors in code. And it helps a lot for readability and
+reuse functions. All the time you now what you need to call functions and which return you will get
+after calling.
+
+Lets have a look on Lua
+
+    function foo (n)
+        n = n or 1
+        n + 1
+        return n
+    end
+
+In this example you could not answer the questions:
+- Which type has the parameter?
+- Will you return something? And which type will it have?
+- Must the parameter be set?
+
+That's not really objective. There still exist documentation and the function it self shows what it needs.
+But you don´t have compiler or Ide support for these kind of functions. Should foo be called like
+foo("abc") it will occurs an invalid-type-exception during runtime and in worst case the programme will
+break.
+One of the main benefits of dynamic typing is it is much easier to write you dont care about expilict
+typing. Code is much smaller and the most time the developer know which types he uses or maybe he doenst
+care. take a look at anonymos functions you call theme in a defined enviroment were you know the types.
+So why should the types explicit (again!) defined if it trivial?
+
 
 == CHEAT Sheet
 
 https://powerman.name/doc/asciidoc
 
 == Talk about LUA Functions
-
 https://www.youtube.com/watch?v=wdRGOE1N-FA
-
 https://pragprog.com/magazines/2013-05/a-functional-introduction-to-lua
 https://www.lua.org/pil/6.html
-
-
-http://vschart.com/compare/lua/vs/go-language
-
-lua
-
-dynamic Typing
-kein Safe Casting
-kein Static Typing
-Object orientierte Models
-
-https://www.lua.org/about.html
 
 Quellen
 https://www.lua.org
 https://www.youtube.com/watch?v=wdRGOE1N-FA (Talk von LUA in Moskau by Roberto Ierusalimschy)
 http://vschart.com/compare/lua/vs/go-language
 Programming in Lua by Roberto Ierusalimschy, Lua.org, December 2003
+The Go Programming Language Donovan, Kernighan
