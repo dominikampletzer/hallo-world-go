@@ -363,7 +363,7 @@ function foldr(func, val, tbl)
 
 
 = Exception handling
-lua
+*lua*
 anonymous functison wiht lexical scoping again error handling could use variables form current function usw.
 simple semantic you need only 2 functions - there you could see how functional programming is a major part of lua.
 simple to interface with other languages
@@ -380,7 +380,52 @@ try is not cost-free (but not very expencive)
         <exception code>
     end
 
-TODO try catch von go einsetzten und alles beschreiben
+*Go*
+
+Go includes 2 Error Strategies
+
+the first one is for functions which could return an error which a programmer can´t handle/controle
+like http reject
+
+    ok, err = http.Get(url)
+    if err != nil {
+        return nil, err // error handling
+    }
+
+this example shows a common case in which the program should not crash. we only need to handle the
+error, maybe throu calling the Get again or what ever.
+
+the second handling is the panic-Function which is reserved for states, behaviour of the program
+which absolutly unnormal and need the handled explicitly or will crash it.
+
+    func NewRational(numerator int, denominator int) Rational {
+	    if denominator == 0 {
+	    	panic("division by zero")
+	    }
+	    ...
+	}
+	a := NewRational(1,0)
+
+    func Parde(input string) (s *Syntax, err error){
+        defer func() {
+            if p:= recover(); p != nil {
+                err = fmt.Errorf("internal error: %v", p)
+            }
+        }()
+        // .. parser ..
+    }
+
+here you could the that a rational would created which has 0 as a denominator which is absolutely
+nonsense and the system could not handle this. -> panic will called and the caller has to handle that
+or the program will break
+
+
+go includes by design the pcall from lua. The aprouch that if the expected behavior of a function
+could be a failure that function has an additional result. This saves performance by calling wrapping
+the function in a pcall.
+The Panic mechanism allows depending of the programmers intention to recover the Program. But sometimes
+it is the right response to panic an maybe break the program. These second Strategy is if you want to
+write the exaption in a logfile or cleanup after the panic or what ever.
 
 = Dynamic vs Static Typing
 
@@ -436,7 +481,8 @@ should variables be declared before use they must also declared with typing
     c = 3 -- will occure an error
 
 This will also effect Function declarations
-Go
+
+*Go*
 
     func foo (a string, b int) string{
         return "Some Value"
