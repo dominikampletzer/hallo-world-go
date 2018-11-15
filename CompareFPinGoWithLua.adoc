@@ -102,7 +102,7 @@ together the hard parts
 
 = Scope / Values References / Functions
 
-go auf lexical scoping überprüfen
+go hat lexical block and universe block S46. in Go-buch :)
 
 == Function Nested
     function foo(x)
@@ -147,6 +147,8 @@ maybe to dynamic you cant check if there really math. there could be every expre
 go
 
     import "fmt"
+    explicites angeben der pfade
+    Groß kleinschreibung sonst keine zugriffsmodifcatoren???
 
 == eval
 
@@ -220,7 +222,17 @@ Lua doesn´t need Interfaces in the usual meaning. An interface says that an Obj
 functions, methods or properties. But in Lua there are no Objects like in Java. But OO Programming way is possible if
 functions and tables are seen as an Object
 
+*Go*
+
+interfaces vai
+
+    type x interface{
+    }
+
 = Asynchrounes /Synchrones Routinen vs Coroutines
+
+Queue in Lua. Warten, noch mal naachschauen
+
 A coroutine is similar to a thread (in the sense of multithreading): a line of execution, with its own stack, its own
 local variables, and its own instruction pointer; but sharing global variables and mostly anything else with other
  coroutines. The main difference between threads and coroutines is that, conceptually (or literally, in a multiprocessor

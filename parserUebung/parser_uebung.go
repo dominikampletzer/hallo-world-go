@@ -34,7 +34,7 @@ import (
   The syntax tree is exactly the one returned by Or.
 */
 func parseExpression(input parse.ParserInput) parse.ParserResult {
-	return parseOr(input)
+	return parse.Parser(parseOr).AndThen(parse.ExpectSpaces.Optional()).First()(input)
 }
 
 /** parseOr parses the following grammar:
@@ -45,14 +45,7 @@ func parseExpression(input parse.ParserInput) parse.ParserResult {
   the symbol "|", i. e. it actually allows for Space* ^ "|".
 */
 func parseOr(input parse.ParserInput) parse.ParserResult {
-	result := parseAnd(input)
-	if result.RemainingInput == nil {
-		return parse.ParserResult{result.Result, result.RemainingInput}
-	} else {
-		return parse.ParserResult{}
-	}
-
-	return parse.ParserResult{nil, input}
+	return parse.Parser(parseAnd).AndThen(expect("|").AndThen(parseOr).Second().Optional()).Convert(makeOr)(input)
 }
 
 /** parseAnd parses the following grammar:
@@ -63,7 +56,7 @@ func parseOr(input parse.ParserInput) parse.ParserResult {
   the symbol "&", i. e. it actually allows for Space* ^ "&".
 */
 func parseAnd(input parse.ParserInput) parse.ParserResult {
-	return parse.ParserResult{nil, input}
+	return parse.Parser(parseNot).AndThen(expect("&").AndThen(parseAnd).Second().Optional()).Convert(makeAnd)(input)
 }
 
 /** parseNot parses the following grammar:
@@ -74,14 +67,19 @@ func parseAnd(input parse.ParserInput) parse.ParserResult {
   Not nodes as there are exclamation marks.
 */
 func parseNot(input parse.ParserInput) parse.ParserResult {
-	return parseExclamationMarks.Repeated().Convert(func(arg interface{}) interface{} {
-		list := arg.([]interface{})
-		slice := []interface{}{}
-		for _, el := range list {
-			slice = append(slice, el.(ast.Node))
-		}
-		return slice
+	return parseExclamationMarks.AndThen(parseAtom).Convert(func(arg interface{}) interface{} {
+		var pair = arg.(parse.Pair)
+		return makeNot(pair.First.(int), pair.Second.(ast.Node))
 	})(input)
+
+	//return parseExclamationMarks.Repeated().Convert(func(arg interface{}) interface{} {
+	//	list := arg.([]interface{})
+	//	slice := []interface{}{}
+	//	for _, el := range list {
+	//		slice = append(slice, el.(ast.Node))
+	//	}
+	//	return slice
+	//})(input)
 }
 
 /** parseExclamationMarks parses the following grammar:
@@ -122,10 +120,15 @@ var parseVariable parse.Parser = func(input parse.ParserInput) parse.ParserResul
 /** makeNot wraps the node into num ast.Not nodes.
  */
 func makeNot(num int, node ast.Node) ast.Node {
-	if num == 0 {
+	//if num == 0 {
+	//	return node
+	//}
+	//return makeNot(num-1, ast.Not{node})
+	if num <= 0 {
 		return node
+	} else {
+		return ast.Not{makeNot(num-1, node)}
 	}
-	return makeNot(num-1, ast.Not{node})
 }
 
 /** makeAnd takes a parse.Pair of ast.Node as an argument and returns an
@@ -135,17 +138,25 @@ func makeNot(num int, node ast.Node) ast.Node {
   component of the Pair as sub-nodes.
 */
 func makeAnd(argument interface{}) interface{} {
-	var arg = argument.(parse.Pair)
-	switch arg.Second.(type) {
-	case parse.Nothing:
-		return arg.First
-	case ast.Node:
-		return ast.And{arg.First.(ast.Node), arg.Second.(ast.Node)}
-	default:
-		return nil
+	var pair = argument.(parse.Pair)
+	if pair.Second == (parse.Nothing{}) {
+		return pair.First
+	} else {
+		var firstNode = pair.First.(ast.Node)
+		var secondNode = pair.Second.(ast.Node)
+		return ast.And{firstNode, secondNode}
 	}
-
-	return ast.And{ast.Val{"a"}, ast.Val{"b"}}
+	//var arg = argument.(parse.Pair)
+	//switch arg.Second.(type) {
+	//case parse.Nothing:
+	//	return arg.First
+	//case ast.Node:
+	//	return ast.And{arg.First.(ast.Node), arg.Second.(ast.Node)}
+	//default:
+	//	return nil
+	//}
+	//
+	//return ast.And{ast.Val{"a"}, ast.Val{"b"}}
 }
 
 /** makeOr takes a parse.Pair of ast.Node as an argument and returns an
@@ -155,15 +166,23 @@ func makeAnd(argument interface{}) interface{} {
   component of the Pair as sub-nodes.
 */
 func makeOr(argument interface{}) interface{} {
-	var arg = argument.(parse.Pair)
-	switch arg.Second.(type) {
-	case parse.Nothing:
-		return arg.First
-	case ast.Node:
-		return ast.Or{arg.First.(ast.Node), arg.Second.(ast.Node)}
-	default:
-		return nil
+	var pair = argument.(parse.Pair)
+	if pair.Second == (parse.Nothing{}) {
+		return pair.First
+	} else {
+		var firstNode = pair.First.(ast.Node)
+		var secondNode = pair.Second.(ast.Node)
+		return ast.Or{firstNode, secondNode}
 	}
+	//var arg = argument.(parse.Pair)
+	//switch arg.Second.(type) {
+	//case parse.Nothing:
+	//	return arg.First
+	//case ast.Node:
+	//	return ast.Or{arg.First.(ast.Node), arg.Second.(ast.Node)}
+	//default:
+	//	return nil
+	//}
 }
 
 /** expect expects the string s at the beginning of the input and ignores
