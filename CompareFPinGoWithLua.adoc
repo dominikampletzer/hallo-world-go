@@ -1,43 +1,58 @@
 = Compare Functional Programming in Go with Lua
 
-- What is Lua?
-- Comparison Go vs Lua - Structure and Features
-- Functional Programming in Lua
-- Differences by Examples
+== Introduction
 
-erstmal rausfinden wie es in Go geht :)
+This article compares two programming languages *Lua* and  *Go(lang)*. This will not include all concepts of these
+languages because we have to less time :) and the object orientated aspects will handled in another package.
+There is some to say about all the explicit concepts and still problems to compare totally different concepts. Here
+it is more done like *Lua* make it this way and *Go* that way.
 
+Ok. That`s enough blabla. Start with Facts :)
 
-= What is Lua?
+== What is Lua?
 
 Lua is a Programming Language which was released, designed, implemented and maintained 1993 by PUC-Rio,
 the Pontifical Catholic University of Rio de Janeiro in Brazil. Till Version 4 it was under the
 BSD-Licence since Version 5 its under MIT-Licence.
 
-Lua creators call it a powerful, efficient, lightweight, embeddable scripting language.
-It supports procedural programming, object-oriented programming, functional programming,
-data-driven programming, and data description.
+In the first Version Lua was created as an library. Forther it grows to a one language.
 
-This sounds nice, but for which use cases are Lua made, or why choose Lua?
+Lua creators goal is to create a powerful, efficient, lightweight and embeddable scripting language. It based of
+concepts of procedural, object-oriented , functional and data-driven programming, also on data description.
 
-Lua is very small and embeddable. It has a small footprint and can embed easily into every platform
-with a standard C compiler. It is currently the leading scripting language in video games. (for Example:
-World of Warcraft or Angry birds)
+Lua is a very small and embeddable language which is focused on portability, size, scripting and simplicity (nobody
+say they create a complicate programming language ...). Because of this it has a small footprint, is easy to embed in
+platforms which support a standard C compiler and it is a scripting language it is dynamically typed.
 
-First Lua is implemented as a library
+It´s easy to create Program written in two languages with Lua. The comparison, that Lua is the glue which holds the
+hard parts of the Program which is written in (maybe) C together, is very good.
 
-Designed for embedding and extending
+Currently Lua is *the* leading scripting language in video games. For Example World of Warcraft and Angry Birds uses
+Lua and Lua won Awards because of this fact.
 
-== Goals of Lua
+== What is Go(lang)?
 
-- Portability: Runs on most platforms we ever heard of, Runs inside OS kernels, Written in ANSI C
-- Simplicity: Well documented C Api and free Manual 100 pages (proxy for complexity)
-- Small size
-- Scripting: dynamic Language - scripting emphasizes inter-language communication;
-Program written in two languages; System Language implements the hard parts of the application - scripting glues
-together the hard parts
+Go aka. Golang is a programming language which was created 2009 from Google. The aim of go is not to be a embeddable
+script language like Lua. It is also based on object-oriented and functional programming but these will combined with
+a few new concepts (not really new some of them for the 70´s).
 
-= Comparison Go vs Lua - Structure and Features
+Google created with go a language which should handle the new challenges which came with the big cloud hipe and its
+requirements.
+
+Go should be:
+
+- Compiled (cross compiler for OS: Mac, Windows, Linux and CPU: ARM, x86 + Amd64)
+- Static type system with runtime support (Reflection, Dynamic Types)
+- Static linker (Single Binary) -> Ideal for Docker containers
+- Focus on fast compile times (the entire Go codebase compiles in <10 seconds)
+- Simple (less keywords like C - 25/32) (what the hack is Simple???)
+- Object-oriented, Functional, Parallel, Modular (vgo) and Versioned
+
+These concepts was rounded which the concepts of Hoare´s CSP (1978) and Dijkstra´s guarded commands (1975). To get rid
+of the heavy Concurrent approach of threads and think in this way.
+
+
+== Small Overview/Comparison Go vs Lua
 
 |===
 |Feature |Go |Lua
@@ -71,19 +86,19 @@ together the hard parts
 |Yes
 
 |Asynchronously
-|Go-Routines, Channels + Locks
+|Goroutines, Channels, Multi-Way cconcurrent control, Locks (Usually not needed!)
 |Coroutines
 
 |Exception Handling
 |panic/recover
-|Yes, Lua ends the current chunk and returns to the application pcall (like try/catch)
+|Lua ends the current chunk and returns to the application pcall (like try/catch)
 
 |Public/Private
 |Implicit by default by Spelling/Writing
 |Privacy by Local Variables or keep Objects/Tables in Closure
 
 |Objects
-|By Embedding and throu interfaces
+|By Embedding and thou interfaces
 |Tables
 
 |Interfaces
@@ -100,7 +115,128 @@ together the hard parts
 
 |===
 
-= Scope / Values References / Functions
+== Typing
+
+One of the biggest differences between Lua an Go is typing. Lua is a dynamic types scripting language and Go on the
+other hand is a simplified static typed language. Both concepts has it´s pros and cons and won´t discussed in this
+article (These should be done of fanboys on conventions, talks and papers). These article shows a high look on the
+concepts and how it is done in the languages.
+
+== Assignment of Variables
+
+Lua and Go allows multi assignment like:
+
+    a,b = 1,2   // Lua
+    a,b := 1,2  // Go - uses ':=' to declare and set values
+
+Very interesting on this example is that Go *knows* the type of the variable by declaring it with a value. This could
+also be done explicit by:
+
+    a int
+    a = 1
+
+but is is still static.
+
+
+Multi assignment allows funny things like to swap without a swap function
+
+    a,b = b,a
+
+or to receive multiple return values of a function without complicate handling (Exception Handling)
+
+    result, error = f()   // Lua
+    result, error := f()  // Go
+
+
+=== Dynamic Typing
+
+with dynamic typing you could but different values into one variable (of course not in the same time)
+
+    a = 1
+    a = "eins"
+    a = f()
+    ...
+
+by static typing in go this is not possible
+
+    a,b = 1,2  -- will work. go "knows" that a and b are integers
+    a = "eins" -- will throw an exception. TypeError
+
+casts must done explicitly like
+
+    arr_1 := []any{2, 3, 4}
+    a = 1
+    a = a + arr_1[0].(int)
+    or
+    arr_2:= []int{1, 2, 3}
+    b = 2 + arr_2[0]
+
+should variables be declared before use they must also declared with typing
+
+    b int
+    c string
+    a = 1 -- works fine
+    b = 2 -- will also work
+    c = 3 -- will occure an error
+
+This will also effect Function declarations
+
+*Go*
+
+    func foo (a string, b int) string{
+        return "Some Value"
+    }
+
+    type Any interface{}
+    func foo_2(a Any, b Any) Any{
+        x string
+        b int
+        x = a.(string)
+        y = b.(int)
+        return "Some Value"
+    }
+    result string
+    result = foo_2("Some", 2).(string)
+
+
+these example shows that the function params could only be string for a and an integer for b. Foo
+must return a string. In the second example you have to cast the params and return value to fit
+the correct type.
+Main benefit is that you use always the correct type and at last during compiling errors will occured
+and during runtime. This prevents for deploy errors in code. And it helps a lot for readability and
+reuse functions. All the time you now what you need to call functions and which return you will get
+after calling.
+
+Lets have a look on Lua
+
+    function foo (n)
+        n = n or 1
+        n + 1
+        return n
+    end
+
+In this example you could not answer the questions:
+- Which type has the parameter?
+- Will you return something? And which type will it have?
+- Must the parameter be set?
+
+That's not really objective. There still exist documentation and the function it self shows what it needs.
+But you don´t have compiler or Ide support for these kind of functions. Should foo be called like
+foo("abc") it will occurs an invalid-type-exception during runtime and in worst case the programme will
+break.
+One of the main benefits of dynamic typing is it is much easier to write you dont care about expilict
+typing. Code is much smaller and the most time the developer know which types he uses or maybe he doenst
+care. take a look at anonymos functions you call theme in a defined enviroment were you know the types.
+So why should the types explicit (again!) defined?
+
+
+
+
+
+
+
+
+== Scope / Values References / Functions
 
 go hat lexical block and universe block S46. in Go-buch :)
 
@@ -308,6 +444,20 @@ The next function ensures that each download runs in an individual thread:
       table.insert(threads, co)
     end
 
+*Go*
+
+Follows totally other concepts of async/sync/Threading
+Go supports Multithreading in form of goRoutines which a very leight and multiplext. This means on and the same goroutine
+could be executied on several OS threads. This offers a lot of new opportunities. This goroutines in the regular way
+without blocking any variable like know from Java. goroutines Communicate to pass data from one routine into another.
+Important to understand is that a Goroutine is not a Thread.
+It Supports
+
+- concurrent execution (goroutine)
+- synchronization and messaging (channels)
+- multi-way concurrent control (select)
+- low level blocking primitives (locks) - Usually not needed!
+
 
 = Pointers?
 
@@ -442,108 +592,7 @@ The Panic mechanism allows depending of the programmers intention to recover the
 it is the right response to panic an maybe break the program. These second Strategy is if you want to
 write the exaption in a logfile or cleanup after the panic or what ever.
 
-= Dynamic vs Static Typing
 
-One of the Biggest differences are the typing between Lua and Go.
-Lua is dynamic typed and Go static typed.
-Dynamic vs Static Typing fills a lot of blogs and posts in web also in papers and so on...
-Both have its pro´s and con´s so we wont discuss theme here only take a look at them and show the consequences of these
-in exsamples
-
-== Assignment
-
-Lua as Go allows multiple assingment like:
-
-    a,b = 1,2
-
-these allows to swap without a swap function
-
-    a,b = b,a
-
-with this aprouch you resive multiple return values
-
-    a,b = f()
-
-a will get the first result b the second one
-
-with dynamic typing you could but different values into one variable (of course not in the same time)
-
-    a = 1
-    a = "eins"
-    a = f()
-    ...
-
-by static typing in go this is not possible
-
-    a,b = 1,2  -- will work. go "knows" that a and b are integers
-    a = "eins" -- will throw an exception. TypeError
-
-casts must done explicitly like
-
-    arr_1 := []any{2, 3, 4}
-    a = 1
-    a = a + arr_1[0].(int)
-    or
-    arr_2:= []int{1, 2, 3}
-    b = 2 + arr_2[0]
-
-should variables be declared before use they must also declared with typing
-
-    b int
-    c string
-    a = 1 -- works fine
-    b = 2 -- will also work
-    c = 3 -- will occure an error
-
-This will also effect Function declarations
-
-*Go*
-
-    func foo (a string, b int) string{
-        return "Some Value"
-    }
-
-    type Any interface{}
-    func foo_2(a Any, b Any) Any{
-        x string
-        b int
-        x = a.(string)
-        y = b.(int)
-        return "Some Value"
-    }
-    result string
-    result = foo_2("Some", 2).(string)
-
-
-these example shows that the function params could only be string for a and an integer for b. Foo
-must return a string. In the second example you have to cast the params and return value to fit
-the correct type.
-Main benefit is that you use always the correct type and at last during compiling errors will occured
-and during runtime. This prevents for deploy errors in code. And it helps a lot for readability and
-reuse functions. All the time you now what you need to call functions and which return you will get
-after calling.
-
-Lets have a look on Lua
-
-    function foo (n)
-        n = n or 1
-        n + 1
-        return n
-    end
-
-In this example you could not answer the questions:
-- Which type has the parameter?
-- Will you return something? And which type will it have?
-- Must the parameter be set?
-
-That's not really objective. There still exist documentation and the function it self shows what it needs.
-But you don´t have compiler or Ide support for these kind of functions. Should foo be called like
-foo("abc") it will occurs an invalid-type-exception during runtime and in worst case the programme will
-break.
-One of the main benefits of dynamic typing is it is much easier to write you dont care about expilict
-typing. Code is much smaller and the most time the developer know which types he uses or maybe he doenst
-care. take a look at anonymos functions you call theme in a defined enviroment were you know the types.
-So why should the types explicit (again!) defined if it trivial?
 
 
 == CHEAT Sheet
@@ -561,3 +610,5 @@ https://www.youtube.com/watch?v=wdRGOE1N-FA (Talk von LUA in Moskau by Roberto I
 http://vschart.com/compare/lua/vs/go-language
 Programming in Lua by Roberto Ierusalimschy, Lua.org, December 2003
 The Go Programming Language Donovan, Kernighan
+Lecture of Johannes Weigend at Technical University of Applied Sciences Rosenheim (There i stole a lot of the go part)
+https://www.youtube.com/watch?v=f6kdp27TYZs&feature=youtu.be&t=1 (Rob Pike Google I/0 2012 - Go Concurrency Patterns)
