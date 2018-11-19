@@ -122,7 +122,7 @@ other hand is a simplified static typed language. Both concepts has it´s pros a
 article (These should be done of fanboys on conventions, talks and papers). These article shows a high look on the
 concepts and how it is done in the languages.
 
-== Assignment of Variables
+=== Assignment of Variables
 
 Lua and Go allows multi assignment like:
 
@@ -148,45 +148,62 @@ or to receive multiple return values of a function without complicate handling (
     result, error := f()  // Go
 
 
-=== Dynamic Typing
+=== Dynamic Typing - Lua
 
-with dynamic typing you could but different values into one variable (of course not in the same time)
+Languages with dynamic typing check the type during runtime. This means it is not important or the programmer has to
+care about which variable holds which type. It could be said a variable could handle values of different types
+(of course not in the same time but in the variable lifecycle). In the next example it will be clearer:
 
     a = 1
     a = "eins"
     a = f()
     ...
 
-by static typing in go this is not possible
+There is no need for casting to get an int into a double/float or what ever. Sounds nice. But there is a lot for the
+programmer to do, if he wants build a stable program. He has to check his variable during input, handling and output.
+He can´t be save is that variable really numeric value or only a string, which only looks numeric, or worse if you
+add to an int an object because in both variable was an int but during runtime it was overridden by any object or what
+ever.
 
-    a,b = 1,2  -- will work. go "knows" that a and b are integers
-    a = "eins" -- will throw an exception. TypeError
+On the other hand if you know there a only correct types and variables it is very easy to handle them, there is no casting
+operator are always work correct, code looks very clean, and you could handle different types the same way.
 
-casts must done explicitly like
+=== Static Typing - Go
+
+For Go is it very important to have static typing with a lot of syntactic sugar. In go you could not assign to variable
+different types (why should someone do that?).
+
+    a := 1      // a will declared as a variable from the type integer an gets the value
+
+    // equivalent to
+    a int
+    a = 1
+
+    a = "one" // will occur a panic Type Error
+
+These concept makes it very easy for developers to know which values he needs for calling functions or handle return
+values. Because every time it is totally clear which variables, params or return values has to be handled.
+
+Of course static typing has problems or ugly sides. Should there be an Array of Objects and is is totally clear that
+only Integer values are in it you have to cast them explicitly.
 
     arr_1 := []any{2, 3, 4}
-    a = 1
-    a = a + arr_1[0].(int)
+    a ;= 1
+    a := a + arr_1[0].(int)
     or
-    arr_2:= []int{1, 2, 3}
-    b = 2 + arr_2[0]
+    arr_2 := []int{1, 2, 3}
+    b := 2 + arr_2[0]
 
-should variables be declared before use they must also declared with typing
+Another important thing to say is that if you declare variables you have also declare the type. It´s not a big deal,
+but it´s good to know.
 
-    b int
-    c string
-    a = 1 -- works fine
-    b = 2 -- will also work
-    c = 3 -- will occure an error
-
-This will also effect Function declarations
-
-*Go*
+The static approuch has also effects on functions. The parameters could only be declared with types. And because of
+this, should the parameter not be clear during creating the function or to use in serveral ways you have to cast
+explicit like:
 
     func foo (a string, b int) string{
         return "Some Value"
     }
-
     type Any interface{}
     func foo_2(a Any, b Any) Any{
         x string
@@ -199,15 +216,16 @@ This will also effect Function declarations
     result = foo_2("Some", 2).(string)
 
 
-these example shows that the function params could only be string for a and an integer for b. Foo
-must return a string. In the second example you have to cast the params and return value to fit
-the correct type.
-Main benefit is that you use always the correct type and at last during compiling errors will occured
-and during runtime. This prevents for deploy errors in code. And it helps a lot for readability and
-reuse functions. All the time you now what you need to call functions and which return you will get
-after calling.
+The example shows that the function params could only be string for 'a' and an integer for 'b'. Foo must return a
+string. In the second function you have to cast the params and return value to fitthe correct type. Main benefit
+is that the developer could easy see the correct type and use it in the correct way. IDE´s and at last the
+compiler could find type errors. In worst case function 'foo_2' could still occur an type error during runtime. Go
+allows type save casts but if it will cast in the wrong type an error occur.
 
-Lets have a look on Lua
+Static typing helps developer to prevent errors. But if it helps to understand the code and supports readability
+depend on the developer who uses it.
+
+Lets take a look on Lua functions to see how it will look there:
 
     function foo (n)
         n = n or 1
@@ -215,103 +233,55 @@ Lets have a look on Lua
         return n
     end
 
-In this example you could not answer the questions:
-- Which type has the parameter?
+Without saying which concept is better, dynamic or static could you answer following questions?
+
+- Which type has the parameter? | How should foo be called?
 - Will you return something? And which type will it have?
 - Must the parameter be set?
 
-That's not really objective. There still exist documentation and the function it self shows what it needs.
-But you don´t have compiler or Ide support for these kind of functions. Should foo be called like
-foo("abc") it will occurs an invalid-type-exception during runtime and in worst case the programme will
-break.
-One of the main benefits of dynamic typing is it is much easier to write you dont care about expilict
-typing. Code is much smaller and the most time the developer know which types he uses or maybe he doenst
-care. take a look at anonymos functions you call theme in a defined enviroment were you know the types.
-So why should the types explicit (again!) defined?
+That's not really fair. There still exist documentation and the function parameter naming could show if its need and
+which type is to use. But you don´t have compiler or IDE support for these kind of typing.
 
+Should foo be called like foo("abc") it will occurs an invalid-type-exception during runtime and in worst case the
+programme will break.
 
+One of the benefits of dynamic typing is it is much easier to write you don´t care about expilict typing and variables
+could reused for what the developer need not for what it is declared. Code could be much smaller and during develop
+the developer know which types he uses or maybe he don´t care. Take a look at anonymous functions you call theme
+in a explicit context were you know the types. So why should the types defined there is only one way to use and it´s
+absolute clear?
 
+== More Characteristics
 
+=== Importing Modules
 
-
-
-
-== Scope / Values References / Functions
-
-go hat lexical block and universe block S46. in Go-buch :)
-
-== Function Nested
-    function foo(x)
-        function p(y)
-            print(y)
-        end
-        p(2*x)
-    end
-
-== anonymous Functions
-    add = (function (x,y) return x+y end)
-
-Functions are First-Class Values
-Functions can be stored in variables and data structures
-Can be passed as arguments to and returned by other functions (higher-order functions)
-They can called anywhere in a program
-
-== Lexical Scoping
-
-Unlike global variables, local variables have their scope limited to the block where they are
-declared. A block is the body of a control structure, the body of a function, or a chunk
-(the file or string with the code where the variable is declared).
-
-That is the same as for functions, so we could create typical closures like
-
- function sequence ()
-      local i = 0
-      return function ()
-               i ++
-               return i
-             end
- end
-
-= importing of Modules
-lua
+In Lua the creators say with a smily maybe the import is maybe to dynamic. The linking to the "math"-library is
+never be checked. During execution it is there or the program throws an error.
 
     local m = require "math"
     print(m.sqrt(10))
 
-maybe to dynamic you cant check if there really math. there could be every expression
-
-go
+Go has static linking. Special is that the whole Path the the imported Package/Library has to be written. If the
+developer uses a state of the art IDE, that IDE handles imports for the Developer so he hasn´t to care.
 
     import "fmt"
-    explicites angeben der pfade
-    Groß kleinschreibung sonst keine zugriffsmodifcatoren???
+    fmt.println("Hello World")
 
-== eval
+=== Pointers / References / Call By Value
 
-lua doesnt have eval function like js it has a load function (historical reason)
-load separated compilation from execution
-load is a pure function
-any code always runs inside some function
+*Lua* don´t offer Pointers (of course internal it uses references to memory) depending on the data-type there were
+reference or values copied. Lua handles allocation and deallocation of strings and other objects.
 
-- we can declare local variables which naturally work like static variables for the functions inside the chunk
-- chunks can return values
+Or more simple all types are passed by value, but function, table, userdata and thread are reference types. An
+exception is String it is immutable and will handled as a reference to a new created string. So it has same behaves
+like a value type, but with better performance. (i have no idea why better performance)
 
-    function eval (code)
-        -- compiles source 'code' and executes the result
-        return load(code)()
-    end
-
-= Closures
- function sequence ()
-      local i = 0
-      return function ()
-               i ++
-               return i
-             end
-    end
+*Go* offer Pointer and all functionality which came with that opportunity.
 
 
-= generic for
+
+
+= generic for gehört zu interessanten functions constructen. dran denken pairs () liefert auch eine Funktion kein array is eine function
  for k, v in pairs(t) do
     print(k, v)
  end
@@ -364,6 +334,90 @@ interfaces vai
 
     type x interface{
     }
+
+
+
+
+
+
+
+
+
+
+
+
+== Functions
+
+Now the basics are set the article could handle functional aspects of both languages.
+
+
+
+
+
+
+== Scope / Values References / Functions
+
+go hat lexical block and universe block S46. in Go-buch :)
+
+== Function Nested
+    function foo(x)
+        function p(y)
+            print(y)
+        end
+        p(2*x)
+    end
+
+== anonymous Functions
+    add = (function (x,y) return x+y end)
+
+Functions are First-Class Values
+Functions can be stored in variables and data structures
+Can be passed as arguments to and returned by other functions (higher-order functions)
+They can called anywhere in a program
+
+== Lexical Scoping
+
+Unlike global variables, local variables have their scope limited to the block where they are
+declared. A block is the body of a control structure, the body of a function, or a chunk
+(the file or string with the code where the variable is declared).
+
+That is the same as for functions, so we could create typical closures like
+
+ function sequence ()
+      local i = 0
+      return function ()
+               i ++
+               return i
+             end
+ end
+
+
+== eval
+
+lua doesnt have eval function like js it has a load function (historical reason)
+load separated compilation from execution
+load is a pure function
+any code always runs inside some function
+
+- we can declare local variables which naturally work like static variables for the functions inside the chunk
+- chunks can return values
+
+    function eval (code)
+        -- compiles source 'code' and executes the result
+        return load(code)()
+    end
+
+= Closures
+ function sequence ()
+      local i = 0
+      return function ()
+               i ++
+               return i
+             end
+    end
+
+
+
 
 = Asynchrounes /Synchrones Routinen vs Coroutines
 
@@ -459,19 +513,7 @@ It Supports
 - low level blocking primitives (locks) - Usually not needed!
 
 
-= Pointers?
 
-*LUA*
-
-Lua doesn´t offer Pointers (of course internal it uses references to memory) depending on the data-type there were
-reference or values copied. Lua handles allocation and deallocation of strungs and other objects
-
- Or as some people like to put it; all types are passed by value, but function, table, userdata and thread are reference types.
-
-string is also a kind of reference type, but is immutable, interned and copy-on-write - it behaves like a value type,
-but with better performance.
-
-*Go* does offer Pointer to give the developer full control
 
 = Map/Reducer sample
 
