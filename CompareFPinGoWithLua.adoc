@@ -122,7 +122,7 @@ other hand is a simplified static typed language. Both concepts has it´s pros a
 article (These should be done of fanboys on conventions, talks and papers). These article shows a high look on the
 concepts and how it is done in the languages.
 
-=== Assignment of Variables
+=== Assigning Variables
 
 Lua and Go allows multi assignment like:
 
@@ -279,9 +279,9 @@ like a value type, but with better performance. (i have no idea why better perfo
 *Go* offer Pointer and all functionality which came with that opportunity.
 
 
+= TBD - bin mir nicht sicher, ob ich generic for sowie interfaces & Objects reinnehmen soll. is evtl was für OO
 
-
-= generic for gehört zu interessanten functions constructen. dran denken pairs () liefert auch eine Funktion kein array is eine function
+=== generic for gehört zu interessanten functions constructen. dran denken pairs () liefert auch eine Funktion kein array is eine function
  for k, v in pairs(t) do
     print(k, v)
  end
@@ -292,7 +292,7 @@ like a value type, but with better performance. (i have no idea why better perfo
 
 https://www.lua.org/pil/7.1.html
 
-= Interfaces?? / Objects
+=== Interfaces?? / Objects - TBD - bin mir nicht sicher, ob ich generic for sowie interfaces & Objects reinnehmen soll. is evtl was für OO
 
 The table type implements associative arrays. An associative array is an array that can be indexed not only with numbers,
  but also with strings or any other value of the language, except nil. Moreover, tables have no fixed size; you can add
@@ -337,29 +337,47 @@ interfaces vai
 
 
 
-
-
-
-
-
-
-
-
-
 == Functions
 
-Now the basics are set the article could handle functional aspects of both languages.
+Now the basics are spoken. Take a deeper dive into functions of both languages.
 
+=== Scope
 
+*Lua* uses lexical scoping this means unlike global variables, local variables have their scope limited to the block
+where they are declared. A block is the body of a control structure, the body of a function, or a chunk (the file or
+string with the code where the variable is declared). That´s the same for functions, so we could create typical
+closures like:
 
+    function sequence ()
+        local i = 0
+        return function ()
+            i ++
+            return i
+        end
+    end
 
+*Go* has nearly the same behaviour except global variables, Go doesn´t contain them. The scoping of go is called
+lexical blocks which means the same as Lua´s lexical scope. The syntactic block is a sequence of statements enclosed
+in braces that surrounds the body of a function or loop. There is a lexical scope for the entire source code, called
+the universal scope; for each package, file, function, loop, switch, switch-case, select and of course for each lexical
+scope. Imports are in the file level scope f.e. fmt. Closures in *Go* looks nearly the same as in Lua:
 
+    func sequence() func() int  {
+    	i := 0
+    	return func() int {
+    		i++
+    		return i
+    	}
+    }
 
-== Scope / Values References / Functions
+How there is to see both could handle closures and functions are first class values/citizens. Which means
+you could treat functions as values. Functions could be function parameter, return values (higher-order functions)
+or stored in variables.
 
-go hat lexical block and universe block S46. in Go-buch :)
+=== Function Nesting
 
-== Function Nested
+As expected both languages have function nesting like to see in *Lua*
+
     function foo(x)
         function p(y)
             print(y)
@@ -367,32 +385,83 @@ go hat lexical block and universe block S46. in Go-buch :)
         p(2*x)
     end
 
-== anonymous Functions
-    add = (function (x,y) return x+y end)
+and *Go*
 
-Functions are First-Class Values
-Functions can be stored in variables and data structures
-Can be passed as arguments to and returned by other functions (higher-order functions)
-They can called anywhere in a program
+    func foo(x int) {
+    	b := func(y int) {
+    		fmt.Println(y)
+    	}
+    	b(2 * x)
+     }
 
-== Lexical Scoping
+=== Anonymous Functions
 
-Unlike global variables, local variables have their scope limited to the block where they are
-declared. A block is the body of a control structure, the body of a function, or a chunk
-(the file or string with the code where the variable is declared).
+Beside function nesting there are in both languages anonymous functions
 
-That is the same as for functions, so we could create typical closures like
+    add = (function (x,y) return x+y end)   // Lua
+    add := func(x int, y int) int {         // Go
+    		return x + y
+    	}
 
- function sequence ()
-      local i = 0
-      return function ()
-               i ++
-               return i
-             end
+
+= TBD Hier hab ich aufgehört
+
+== More Functional Samples
+
+=== Map/Reducer sample
+
+The "canonical" example of a function that takes another function as a parameter is map. Unfortunately map does not come with Lua, so we'll have to code it ourselves.
+
+function map(func, array)
+  local new_array = {}
+  for i,v in ipairs(array) do
+    new_array[i] = func(v)
+  end
+  return new_array
+end
+
+This is a simple map implementation that only works with one array. But it works well:
+
+> return table.concat(map(double, {1,2,3}),",")
+2,4,6
+
+A more complex map implementation that works with more than one array is possible:
+
+function mapn(func, ...)
+  local new_array = {}
+  local i=1
+  local arg_length = table.getn(arg)
+  while true do
+    local arg_list = map(function(arr) return arr[i] end, arg)
+    if table.getn(arg_list) < arg_length then return new_array end
+    new_array[i] = func(unpack(arg_list))
+    i = i+1
+  end
+end
+
+
+REDUCER
+function foldr(func, val, tbl)
+     for i,v in pairs(tbl) do
+         val = func(val, v)
+     end
+     return val
  end
 
+ -- reduce(function, table)
+ -- e.g: reduce(operator.add, {1,2,3,4}) -> 10
+ function reduce(func, tbl)
+     return foldr(func, head(tbl), tail(tbl))
+ end
 
-== eval
+ The pairs function, which iterates over all elements in a table, is similar, except that the iterator function is the next function, which is a primitive function in Lua:
+
+     function pairs (t)
+       return next, t, nil
+     end
+
+
+=== eval
 
 lua doesnt have eval function like js it has a load function (historical reason)
 load separated compilation from execution
@@ -407,19 +476,7 @@ any code always runs inside some function
         return load(code)()
     end
 
-= Closures
- function sequence ()
-      local i = 0
-      return function ()
-               i ++
-               return i
-             end
-    end
-
-
-
-
-= Asynchrounes /Synchrones Routinen vs Coroutines
+== Asynchrounes /Synchrones Routinen vs Coroutines
 
 Queue in Lua. Warten, noch mal naachschauen
 
@@ -515,61 +572,7 @@ It Supports
 
 
 
-= Map/Reducer sample
-
-The "canonical" example of a function that takes another function as a parameter is map. Unfortunately map does not come with Lua, so we'll have to code it ourselves.
-
-function map(func, array)
-  local new_array = {}
-  for i,v in ipairs(array) do
-    new_array[i] = func(v)
-  end
-  return new_array
-end
-
-This is a simple map implementation that only works with one array. But it works well:
-
-> return table.concat(map(double, {1,2,3}),",")
-2,4,6
-
-A more complex map implementation that works with more than one array is possible:
-
-function mapn(func, ...)
-  local new_array = {}
-  local i=1
-  local arg_length = table.getn(arg)
-  while true do
-    local arg_list = map(function(arr) return arr[i] end, arg)
-    if table.getn(arg_list) < arg_length then return new_array end
-    new_array[i] = func(unpack(arg_list))
-    i = i+1
-  end
-end
-
-
-REDUCER
-function foldr(func, val, tbl)
-     for i,v in pairs(tbl) do
-         val = func(val, v)
-     end
-     return val
- end
-
- -- reduce(function, table)
- -- e.g: reduce(operator.add, {1,2,3,4}) -> 10
- function reduce(func, tbl)
-     return foldr(func, head(tbl), tail(tbl))
- end
-
- The pairs function, which iterates over all elements in a table, is similar, except that the iterator function is the next function, which is a primitive function in Lua:
-
-     function pairs (t)
-       return next, t, nil
-     end
-
-
-
-= Exception handling
+== Exception handling
 *lua*
 anonymous functison wiht lexical scoping again error handling could use variables form current function usw.
 simple semantic you need only 2 functions - there you could see how functional programming is a major part of lua.
@@ -635,7 +638,11 @@ it is the right response to panic an maybe break the program. These second Strat
 write the exaption in a logfile or cleanup after the panic or what ever.
 
 
+= Abschließend zu sagen
 
+Lua ist für single anwendungen gedacht, die embedding usw gedacht
+
+Go für Cloud anwendung die parallel und multithreaded sind
 
 == CHEAT Sheet
 
