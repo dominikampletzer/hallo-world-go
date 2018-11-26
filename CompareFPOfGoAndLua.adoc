@@ -1,6 +1,7 @@
 = Compare Functional Programming of Go and Lua
+by Dominik Ampletzer <dom@xxz.de>
+:toc:
 
-by Dominik Ampletzer
 
 == Introduction
 
@@ -283,7 +284,7 @@ like a value type, but with better performance. (i have no idea why better perfo
 *Go* offer Pointer and all functionality which came with that opportunity.
 
 
-= TBD - bin mir nicht sicher, ob ich generic for sowie interfaces & Objects reinnehmen soll. is evtl was für OO
+== TBD - bin mir nicht sicher, ob ich generic for sowie interfaces & Objects reinnehmen soll. is evtl was für OO
 
 === generic for gehört zu interessanten functions constructen. dran denken pairs () liefert auch eine Funktion kein array is eine function
  for k, v in pairs(t) do
@@ -408,9 +409,7 @@ Beside function nesting there are in both languages anonymous functions
     	}
 
 
-== More Functional Samples
-
-=== Map/Reducer sample
+=== Example Map-Function
 
 The "canonical" example of a function that takes another function as a parameter is map. Unfortunately map does not
 come with *Lua*, so we'll have to code it ourselves.
