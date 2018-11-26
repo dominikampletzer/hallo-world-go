@@ -1,11 +1,13 @@
-= Compare Functional Programming in Go with Lua
+= Compare Functional Programming of Go and Lua
+
+by Dominik Ampletzer
 
 == Introduction
 
-This article compares two programming languages *Lua* and  *Go(lang)*. This will not include all concepts of these
-languages because we have to less time :) and the object orientated aspects will handled in another package.
-There is some to say about all the explicit concepts and still problems to compare totally different concepts. Here
-it is more done like *Lua* make it this way and *Go* that way.
+This article compares two programming languages - *Lua* and  *Go(lang)*. It covers the most important concepts of these
+two languages. Object orientated aspects will be handled in separate articles. There is a lot to say about all the explicit
+concepts and still problems to compare totally different concepts. Here to e it is more done like *Lua* make it this way and
+*Go* that way.
 
 Ok. That`s enough blabla. Start with Facts :)
 
@@ -15,7 +17,7 @@ Lua is a Programming Language which was released, designed, implemented and main
 the Pontifical Catholic University of Rio de Janeiro in Brazil. Till Version 4 it was under the
 BSD-Licence since Version 5 its under MIT-Licence.
 
-In the first Version Lua was created as an library. Forther it grows to a one language.
+In the first Version Lua was created as a library. Further it grows to a one language.
 
 Lua creators goal is to create a powerful, efficient, lightweight and embeddable scripting language. It based of
 concepts of procedural, object-oriented , functional and data-driven programming, also on data description.
@@ -410,7 +412,8 @@ Beside function nesting there are in both languages anonymous functions
 
 === Map/Reducer sample
 
-The "canonical" example of a function that takes another function as a parameter is map. Unfortunately map does not come with Lua, so we'll have to code it ourselves.
+The "canonical" example of a function that takes another function as a parameter is map. Unfortunately map does not
+come with Lua, so we'll have to code it ourselves.
 
 function map(func, array)
   local new_array = {}
@@ -454,7 +457,8 @@ function foldr(func, val, tbl)
      return foldr(func, head(tbl), tail(tbl))
  end
 
- The pairs function, which iterates over all elements in a table, is similar, except that the iterator function is the next function, which is a primitive function in Lua:
+ The pairs function, which iterates over all elements in a table, is similar, except that the iterator function is the
+ next function, which is a primitive function in Lua:
 
      function pairs (t)
        return next, t, nil
