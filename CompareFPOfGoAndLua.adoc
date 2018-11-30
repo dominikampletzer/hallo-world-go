@@ -6,43 +6,48 @@ by Dominik Ampletzer <dom@xxz.de>
 == Introduction
 
 This article compares two programming languages - *Lua* and  *Go(lang)*. It covers the most important concepts of these
-two languages. Object orientated aspects will be handled in separate articles. There is a lot to say about all the explicit
-concepts and still problems to compare totally different concepts. Here to see it is more done like *Lua* make it this way and
-*Go* that way.
+two languages.
 
-Ok. That`s enough blabla. Start with Facts :)
+- It will start with a high overview and what are the languages
+- Take a deeper look into the Typing of both
+- Show the object orientated aspects of Lua and explain tables
+- Show how functions and Exception handling works
+- Jump into Goroutines and Coroutines
 
 == What is Lua?
 
-Lua is a Programming Language which was released, designed, implemented and maintained 1993 by PUC-Rio,
-the Pontifical Catholic University of Rio de Janeiro in Brazil. Till Version 4 it was under the
+Lua is a programming language which was released, designed, implemented and maintained 1993 by PUC-Rio,
+the Pontifical Catholic University of Rio de Janeiro in Brazil. Till version 4 it was under the
 BSD-Licence since Version 5 its under MIT-Licence.
 
-In the first Version Lua was created as a library. Further it grows to a one language.
+In the first Version Lua was created as a library. During time and further developing it grows to a programming language.
 
 Lua creators goal is to create a powerful, efficient, lightweight and embeddable scripting language. It based of
 concepts of procedural, object-oriented , functional and data-driven programming, also on data description.
 
-Lua is a very small and embeddable language which is focused on portability, size, scripting and simplicity (nobody
-say they create a complicate programming language ...). Because of this it has a small footprint, is easy to embed in
-platforms which support a standard C compiler and it is a scripting language it is dynamically typed.
+Lua is a very small and embeddable language which is focused on portability, size, scripting and simplicity (Never did
+any creator of a language sad, he or she wants to create a complex and unknowable language :) ). Because of this it has
+a small footprint, is easy to embed in platforms which support a standard C compiler and it is a scripting language it
+is dynamically typed.
 
-It´s easy to create Program written in two languages with Lua. The comparison, that Lua is the glue which holds the
-hard parts of the Program which is written in (maybe) C together, is very good.
+It´s easy to create a program written in two languages with Lua. Lua could sean as the glue which holds the hard parts
+of a program ( maybe written in _C_) together.
 
-Currently Lua is *the* leading scripting language in video games. For Example World of Warcraft and Angry Birds uses
-Lua and Lua won Awards because of this fact.
+Currently Lua is *the* leading scripting language in video games. For Example World of Warcraft and Angry Birds use
+Lua. Because of the popularity of Lua it won´s Awards like the _Front Line Award 2011_.
 
 == What is Go(lang)?
 
-Go aka. Golang is a programming language which was created 2009 from Google. The aim of go is not to be a embeddable
+Go aka. Golang is a programming language which was created 2009 by Google. The aim of go is not to be an embeddable
 script language like Lua. It is also based on object-oriented and functional programming but these will combined with
-a few new concepts (not really new some of them for the 70´s).
+a few new concepts. New only relatively spoken, for some of these concepts from the 70´s. But why use such old stuff?
+In the 70´s that concepts was only theoretical without a use case. That changed with multi core cpu´s, distributed
+computing and the whole cloud stuff :).
 
-Google created with go a language which should handle the new challenges which came with the big cloud hipe and its
+With Go Google created a language which should handle the new challenges which came with the big cloud hype and its
 requirements.
 
-Go should be:
+These are the requirements Google wanted to meet:
 
 - Compiled (cross compiler for OS: Mac, Windows, Linux and CPU: ARM, x86 + Amd64)
 - Static type system with runtime support (Reflection, Dynamic Types)
@@ -51,10 +56,10 @@ Go should be:
 - Simple (less keywords like C - 25/32) (what the hack is Simple???)
 - Object-oriented, Functional, Parallel, Modular (vgo) and Versioned
 
-These concepts was rounded which the concepts of Hoare´s CSP (1978) and Dijkstra´s guarded commands (1975). To get rid
-of the heavy Concurrent approach of threads and think in this way.
+These concepts was rounded with the concept of Hoare´s CSP (1978) and Dijkstra´s guarded commands (1975). To get rid
+of the heavy concurrent approach of threads and think in this way.
 
-That challanges are solved by Go and it is a part of the cloud native landscape.
+That challanges are solved by Go, and it is now part of the cloud native landscape.
 
 
 == Small Overview/Comparison Go vs Lua
@@ -166,17 +171,17 @@ care about which variable holds which type. It could be said a variable could ha
 
 There is no need for casting to get an int into a double/float or what ever. Sounds nice. But there is a lot for the
 programmer to do, if he wants build a stable program. He has to check his variable during input, handling and output.
-He can´t be save is that variable really numeric value or only a string, which only looks numeric, or worse if you
-add to an int an object because in both variable was an int but during runtime it was overridden by any object or what
-ever.
+He or she can´t be sure is that variable really numeric value or only a string, which only looks numeric. Even worse if
+you add to an int an object because in both variable was an int but during runtime it was overridden by any object or
+what ever.
 
-On the other hand if you know there a only correct types and variables it is very easy to handle them, there is no casting
-operator are always work correct, code looks very clean, and you could handle different types the same way.
+On the other hand if you know there are only correct types and variables, it is very easy to handle them. The casting
+operation always works correct if needed, the code looks very clean, and one can handle different types the same way.
 
 === Static Typing - Go
 
-For Go is it very important to have static typing with a lot of syntactic sugar. In go you could not assign to variable
-different types (why should someone do that?).
+For *Go* is it very important to have static typing with a lot of syntactic sugar.  In Go one can’t assign to a variable
+in different types (Why should someone do that? Its much easier to create a new variable).
 
     a := 1      // a will declared as a variable from the type integer an gets the value
 
@@ -186,10 +191,10 @@ different types (why should someone do that?).
 
     a = "one" // will occur a panic Type Error
 
-These concept makes it very easy for developers to know which values he needs for calling functions or handle return
-values. Because every time it is totally clear which variables, params or return values has to be handled.
+These concept makes it very easy for developers to know which values he or she needs for calling functions or handle
+return values. Because every time it is totally clear which variables, params or return values has to be handled.
 
-Of course static typing has problems or ugly sides. Should there be an Array of Objects and is is totally clear that
+Of course static typing have problems or ugly sides. Should there be an Array of Objects and it is totally clear that
 only Integer values are in it you have to cast them explicitly.
 
     arr_1 := []any{2, 3, 4}
@@ -199,12 +204,11 @@ only Integer values are in it you have to cast them explicitly.
     arr_2 := []int{1, 2, 3}
     b := 2 + arr_2[0]
 
-Another important thing to say is that if you declare variables you have also declare the type. It´s not a big deal,
-but it´s good to know.
+Another important thing to say is that if one declares variables one must also declare the type. It´s not a big deal,
+but it´s good to know and a kind of syntactic sugar.
 
-The static approuch has also effects on functions. The parameters could only be declared with types. And because of
-this, should the parameter not be clear during creating the function or to use in serveral ways you have to cast
-explicit like:
+The static approach has also effects on functions. The parameters can only be declared with types. Because of this,
+should the parameter not be clear during creating the function or to use in several ways you have to cast explicit like:
 
     func foo (a string, b int) string{
         return "Some Value"
@@ -221,16 +225,16 @@ explicit like:
     result = foo_2("Some", 2).(string)
 
 
-The example shows that the function params could only be string for 'a' and an integer for 'b'. Foo must return a
-string. In the second function you have to cast the params and return value to fitthe correct type. Main benefit
-is that the developer could easy see the correct type and use it in the correct way. IDE´s and at last the
-compiler could find type errors. In worst case function 'foo_2' could still occur an type error during runtime. Go
-allows type save casts but if it will cast in the wrong type an error occur.
+The example shows that the function params could only be string for _a_ and an integer for _b_. _foo_ must return a
+string. In the second function you have to cast the params and return value to fit the correct type. Main benefit is
+that the developer can easily see the correct type and use it in the correct way. IDE´s and at last the compiler are
+able to find type errors. In worst case function _foo_2_ could still occur an type error during runtime. Go allows type
+save casts but if it will cast in the wrong type an error occur.
 
-Static typing helps developer to prevent errors. But if it helps to understand the code and supports readability
-depend on the developer who uses it.
+Static typing helps developer to prevent errors. But if it helps to understand the code and supports, readability depend
+on the developer who uses it.
 
-Lets take a look on Lua functions to see how it will look there:
+Let’s take a look on Lua functions to see how it will look there:
 
     function foo (n)
         n = n or 1
@@ -240,21 +244,20 @@ Lets take a look on Lua functions to see how it will look there:
 
 Without saying which concept is better, dynamic or static could you answer following questions?
 
-- Which type has the parameter? | How should foo be called?
+- Which type has the parameter? Or how should _foo_ be called?
 - Will you return something? And which type will it have?
 - Must the parameter be set?
 
-That's not really fair. There still exist documentation and the function parameter naming could show if its need and
-which type is to use. But you don´t have compiler or IDE support for these kind of typing.
+That’s not really fair. There still exists documentation and the function parameter naming could show if it’s needed and
+which type is to use. But you don´t have compiler or IDE support for this kind of typing.
 
-Should foo be called like foo("abc") it will occurs an invalid-type-exception during runtime and in worst case the
-programme will break.
+Should foo be called like _foo("abc")_ it will occur an invalid-type-exception during runtime and in the worst case the
+program will break.
 
-One of the benefits of dynamic typing is it is much easier to write you don´t care about expilict typing and variables
-could reused for what the developer need not for what it is declared. Code could be much smaller and during develop
-the developer know which types he uses or maybe he don´t care. Take a look at anonymous functions you call theme
-in a explicit context were you know the types. So why should the types defined there is only one way to use and it´s
-absolute clear?
+One of the benefits of dynamic typing is it is much easier to write, you don´t care about explicit typing and variables
+could reused for what the developer needs not for what it is declared. Code can be much smaller and during developing
+the developer know which types he uses if he even cares . Anonymous functions are called in an explicit context where
+the types are known.  So why should there be types defined? There is only one way to use and it´s absolute clear!
 
 == More Characteristics
 
@@ -340,18 +343,16 @@ interfaces vai
     type x interface{
     }
 
-
-
 == Functions
 
-Now the basics are spoken. Take a deeper dive into functions of both languages.
+Now the basics are clear. Let’s take a deeper dive into the functions of both languages.
 
 === Scope
 
 *Lua* uses lexical scoping this means unlike global variables, local variables have their scope limited to the block
-where they are declared. A block is the body of a control structure, the body of a function, or a chunk (the file or
-string with the code where the variable is declared). That´s the same for functions, so we could create typical
-closures like:
+where they are declared. A block is the body of a control structure, the body of a function or a chunk (the file or
+string with the code where the variable is declared). That´s the same for functions, so we could create typical closures
+like:
 
     function sequence ()
         local i = 0
@@ -361,11 +362,11 @@ closures like:
         end
     end
 
-*Go* has nearly the same behaviour except global variables, Go doesn´t contain them. The scoping of go is called
-lexical blocks which means the same as Lua´s lexical scope. The syntactic block is a sequence of statements enclosed
-in braces that surrounds the body of a function or loop. There is a lexical scope for the entire source code, called
-the universal scope; for each package, file, function, loop, switch, switch-case, select and of course for each lexical
-scope. Imports are in the file level scope f.e. fmt. Closures in *Go* looks nearly the same as in Lua:
+*Go* has nearly the same behaviour except global variables, Go doesn´t contain them. The scoping of Go is called lexical
+blocks, which means the same as Lua´s lexical scope. The syntactic block is a sequence of statements enclosed in braces
+that surround the body of a function or loop. There is a lexical scope for the entire source code, called the universal
+scope: For each package, file, function, loop, switch, switch-case, select and of course for each lexical scope. Imports
+are in the file level scope. Closures in Go look nearly the same as in Lua:
 
     func sequence() func() int  {
     	i := 0
@@ -375,13 +376,12 @@ scope. Imports are in the file level scope f.e. fmt. Closures in *Go* looks near
     	}
     }
 
-How there is to see both could handle closures and functions are first class values/citizens. Which means
-you could treat functions as values. Functions could be function parameter, return values (higher-order functions)
-or stored in variables.
+As we can see  both can handle closures and functions as first class values/citizens. Which means you can treat
+functions as values. Functions could be function parameter, return values (higher-order functions) or stored in variables.
 
 === Function Nesting
 
-As expected both languages have function nesting like to see in *Lua*
+As expected both languages have function nesting like we see in *Lua*
 
     function foo(x)
         function p(y)
@@ -411,7 +411,7 @@ Beside function nesting there are in both languages anonymous functions
 
 === Example Map-Function
 
-The "canonical" example of a function that takes another function as a parameter is map. Unfortunately map does not
+The "canonical" example of a function that takes another function as a parameter is _map_. Unfortunately _map_ does not
 come with *Lua*, so we'll have to code it ourselves.
 
     function map(func, array)
@@ -426,7 +426,7 @@ This is a simple map implementation that only works with one array. But it works
 
     return table.concat(map(double, {1,2,3}),",") // 2,4,6
 
-Its very funny that *Go* same as Lua does not include a map function. So to compare code it ourselve.
+Its very funny that *Go* same as Lua does not include a map function. So to compare code it ourselves.
 
     func Map(foo func(interface{}) interface{}, arr []interface{}) interface{} {
     	temp := new([]interface{})
@@ -437,8 +437,8 @@ Its very funny that *Go* same as Lua does not include a map function. So to comp
     }
 
 In the Go example there is to see that interface{} is very often used to use Map with every type. That looks very ugly
-and does not support the developer how the function should used. To use it more explicit and with the common
-"Object.Function()"-Notation for using functions on Objects Map could written for a type explicit.
+and does not support the developer in how the function should be used. To use it more explicit and with the common
+_Object.Function()_-Notation for using functions on Objects Map could written for a type explicit.
 
     func (s *SomeType) Map(mapperFunction AnyInterface) SomeReturnValue {
     	for i, el := range s.data {
@@ -451,20 +451,20 @@ and does not support the developer how the function should used. To use it more 
 
 == Exception handling
 
-*Lua* uses function nesting for its error handling. The _pcall_-Function (Protacted Call) tooks the functions which
-should calls and could produce an error and calls them. _pcall_ returns two values a ok-Value should all be ok :)
-and a second value with the error message. This is a very good example how function nesting and multi assignment work.
+*Lua* uses function nesting for its error handling. The _pcall_-Function (Protacted Call) tooks a function as parameter
+and calls that function. _pcall_ returns two values a ok-Value should all be ok :) and a second value with the error
+message should during calling the function an error occur. This is a very good example how function nesting and multi
+assignment work.
 
     local ok, err = pcall(function() <block/error> end)
     if not ok then
         print(err) // error handling
     end
 
-Simple semantic you need only 2 functions - there you could see how functional programming is a major part of lua.
+Simple semantic you need only 2 functions – this shows that functional programming is a major part of Lua.
 
-For *Go* its nearly the same. For functions which the developer it is usual to handle errors like http reject that
-function has to return an error. There is no need of _pcall_ the called functions have to include there own error
-statements like:
+For *Go* its nearly the same. For functions which it is usual to intend an error, like http calls, that function has to
+return an error by design in error case. So there is no need wrapping functions into a _pcall_ like:
 
     ok, err := http.Get(url)
     if err != nil {
@@ -474,8 +474,10 @@ statements like:
 this example shows a common case in which the program should not crash. we only need to handle the
 error, maybe across calling the Get again or what ever.
 
-The second handling strategy is for unexpected error the _panic_-Function which is reserved for states, behaviour of
-the program. Like cleanup a Webserver or write into a logfile and stop the application more controled or maybe recover.
+The second handling strategy is for unexpected error the _panic_-Function which is reserved for _wrong_ states and
+behaviour of the program. _Panic_ could be cached to maybe cleanup a Webserver, write into a logfile, stop the
+program more controlled or maybe recover.
+
 Panics could be thrown very easy.
 
 	panic("42")
@@ -491,14 +493,12 @@ and similar simple cached
         // .. parser ..
     }
 
-*Go* includes by design the _pcall_ from lua. But the _pcall_ has to be build into the functions as a expected behavior,
-as an additional return value. This is a better approach and have better performance wrapping every unsafe function into
-a _pcall_.
-The Panic mechanism allows depending of the programmers intention to recover the Program. Do not forget sometimes
-it is the right response to panic and maybe break the application.
+*Go* includes by design the _pcall_ from Lua. But the _pcall_ needs to be built into the functions as an expected
+behaviour, as an additional return value. This is a better approach and has better performance wrapping every unsafe
+function into a _pcall_. The Panic mechanism allows depending of the developers intention to recover the program. Do not
+ forget sometimes it is the right response to panic and maybe break the program.
 
-
-== Routinen vs Coroutines or Async and Threading
+== Routinen vs Coroutines or Async and Threading -- nochnmal überpüfen eventloop ansatz - wie in gui nicht hochskalierbar aber nicht komnplex
 
 *Lua* offers coroutine which are similar to a the well known thread (in the sense of multithreading): a line of execution,
 with its own stack, its own local variables, and its own instruction pointer; but sharing global variables and
@@ -507,8 +507,8 @@ mostly anything else with other coroutines. The main difference between threads 
 the other hand, are collaborative: A program with coroutines is, at any given time, running only one of its coroutines
 and this running coroutine only suspends its execution when it explicitly requests to be suspended.
 
-A coroutine has 3 states: suspended, running, dead. It could be stored in variables and coroutines has functionality
-to get its state, close, yield and creating them.
+A coroutine has 3 states: _suspended_, _running_, _dead_. It could be stored in variables and coroutines has
+functionality to get its state, close, yield and creating them.
 
     co = coroutine.create(function ()
            for i=1,10 do
@@ -521,12 +521,12 @@ Now, when we resume this coroutine, it starts its execution and runs until the f
 
     coroutine.resume(co)    // 1
 
-If the status will be checked it return the suspended-state.
+If the status will be checked it returns the _suspended_-state.
 
     print(coroutine.status(co))   --> suspended
 
-This can be done till the for-loop is ending. Than the state of the coroutine will changed to dead. And it could not
-longer be called without an exception.
+This can be done till the for-loop is ending. Then the state of the coroutine will change to dead. It can no longer be
+called without an exception.
 
 For example downloading different files using http. It could be downloaded in sequence (tooks a long time)
 or is there currently no data available the coroutines could yield and another coroutine could run and so own.
@@ -563,20 +563,19 @@ The next function ensures that each download runs in an individual thread:
       table.insert(threads, co)                 // insert into list
     end
 
-Coroutines are a kind of collaborative multithreading. There a not constructed as real multithreading like go-routines.
+Coroutines are a kind of collaborative multithreading. There a not constructed as real multithreading like Goroutines.
 While a coroutine is running, it cannot be stopped from the outside! However, with non-preemptive multithreading,
 whenever any thread calls a blocking operation, the whole program blocks until the operation completes.
 
-*Go* on follows totally other concepts of async and threading. Go supports multithreading in form of goRoutines which a
-very leight and multiplext. This means a goroutine could be executied on several OS threads. This concept offers the
-opportunity the use all cores of a machine. This goroutines in common use does not use blocking. It is possible be
-unusual. Goroutines uses communication to pass data from one routine into another. This method are inspired by Hoare´s
-CSP (1978) and Dijkstra´s guarded commands (1975). In these concepts there is no need to share memory or variables to
-pass data between goroutines the communicate to handle that. For these go include so called channels in which could be
-written or read. Depending on the use case with or without buffer. The default channel does not have a buffer size, so
-if a goroutine whould write into a channel it wait till on the other side is a receiver of the massage. Similar to that
-the receiver wait till someone write into the channel. With this simple rules routines could be synchronised.
-
+*Go* on follows totally other concepts of async and threading. Go supports multithreading in form of Goroutines which
+are very light and multiplext. This means a Goroutine could be executed on several OS threads. This concept offers the
+opportunity to use all cores of a machine. This Goroutines in common do not use blocking. It is possible but unusual.
+Goroutines uses communication to pass data from one routine into another. This method is inspired by Hoare´s CSP (1978)
+and Dijkstra´s guarded commands (1975). In these concepts there is no need to share memory or variables to pass data
+between Goroutines, they communicate to handle that. For these Go includes so called channels in which can be written or
+read. Depending on the use case, with or without buffering. The default channel has no buffer size, so if a Goroutine
+would write into a channel it waits for a receiver on the other side. Similar to that the receiver waits till someone
+writes into the channel. With these simple rules routines can be synchronised.
 
     type Ball struct{ hits int }                    // Ball contains the number of hits.
     func main() {
@@ -600,7 +599,7 @@ the receiver wait till someone write into the channel. With this simple rules ro
 This example shows a lot. Start with definitions of unusual operators and reserved words:
 
 -  _chan_ is the type of Channels
-- _go_-command tells the machine that this should be startet asynchrounisly as a independent goroutine. (very easy
+- _go_-command tells the machine that this should be started asynchronously  as an independent Goroutine. (very easy
 syntax)
 -  _some_value_ means to write _some_value_ into the channel
 -  a = \<- _some_channel_ tooks the value from a channel
@@ -608,18 +607,18 @@ syntax)
 Lets look deeper into the example above.
 
 - In the first line a struct is created which contains the hits (boring)
-- the main-function creats a table which is a channel of Ball-Pointer
-- than two player-functions will lunched. Both get a name and took a channel of Ball-Pointer. And start in a infinite
+- The main-function creats a table which is a channel of Ball-Pointer
+- Than two player-functions will launched. Both get a name and took a channel of Ball-Pointer. And start in a infinite
 loop: wait to read from table, hit the ball, write the hits to the console, wait and write to the table channel.
-- now the game starts. The first message is written into the table channel (do not forget the two player-functions
+- Now the game starts. The first message is written into the table channel (do not forget the two player-functions
 are started and waiting for the first message to handle the ball)
-- wait
-- take a message from the channel (=> the two players both wait for a message at the table-channel but non will be there)
+- Wait
+- Take a message from the channel (=> the two players both wait for a message at the table-channel but non will be there)
 GAME OVER!
 
-Important to understand is that a Goroutine is not a Thread. Its much more lighter and does not share variables or memory.
-It passes data using channels. That needs new control structures like the _select_ which is nearly the same as usual
-_switch_-statements only for sequential goroutine handling. And of course if it is needed go offers blocking:
+It is important to understand is that a Goroutine is not a Thread. It’s much more lighter and does not share variables
+or memory. It passes data using channels. That needs new control structures like the _select_-Statement which is nearly
+the same as usual _switch_-statements only for sequential Goroutine handling. And of course if it is needed Go offers blocking:
 
     var someThing sync.Mutex
     func BlockingExample() {
@@ -628,11 +627,13 @@ _switch_-statements only for sequential goroutine handling. And of course if it 
     ...
     }
 
-= Closing words
+= Summary
 
-It´s hard to compare *Lua* and *Go*. Because *Lua* is made as an embaddable light wight dynamic script language and
-*Go* as cloud programming language which is optimized for challanges of this disciplin. It is light wight static fast to
-compile multi threading concurrent language. But both languages are very interessting and both have interessting concepts.
+It´s hard to compare *Lua* and *Go*. Because *Lua* is made as an embaddable lightweight  dynamic script language, while
+*Go* as cloud programming language, optimized for the challenges of this discipline. It is lightweight static fast to
+compile multi-threading concurrent language. But both languages are very interesting and both have exciting concepts.
+
+Hier nochmal SUMMaRY welche Sprachen für was zu benutzen sind!!
 
 == CHEAT Sheet
 
