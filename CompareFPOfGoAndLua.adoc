@@ -1,5 +1,4 @@
 = Compare Functional Programming of Go and Lua
-by Dominik Ampletzer <dom@xxz.de>
 :toc:
 
 
@@ -8,11 +7,11 @@ by Dominik Ampletzer <dom@xxz.de>
 This article compares two programming languages - *Lua* and  *Go(lang)*. It covers the most important concepts of these
 two languages.
 
-- It will start with a high overview and what are the languages
-- Take a deeper look into the Typing of both
-- Show the object orientated aspects of Lua and explain tables
+- It will start with a high overview and what and for which use case the languages was designed
+- Deeper dive into Typing of both
+- Objects in Lua and explain tables
 - Show how functions and Exception handling works
-- Jump into Goroutines and Coroutines
+- Jump into Goroutines and Coroutines, which are made for different use cases
 
 == What is Lua?
 
@@ -304,19 +303,14 @@ functions. That could be done in several ways like:
     a.german(a)                  // Servus
     a.english(a)                 // HI
 
-or more syntactical sugar and more functionality with metatable
+or with more syntactical sugar and more functionality like metatable
 
- LanguageTable = {
+    LanguageTable = {
         de = "", en = "",
-        metaTable = {},
+        mt = {},
         New = function()
             helloT = {}
-            setmetatable(helloT, LanguageTable.metaTable)   // setmetatable come from lua
-            helloT.de = LanguageTable.de
-            helloT.en = LanguageTable.en
-            helloT.german = LanguageTable.german
-            helloT.english = LanguageTable.english
-            helloT.metaTable = LanguageTable.metaTable
+            setmetatable(helloT, LanguageTable.mt)   // setmetatable() came with Lua
             return helloT
         end,
         german = function(self) // convention
@@ -326,41 +320,36 @@ or more syntactical sugar and more functionality with metatable
             print(self.en)
         end
     }
-    a = LanguageTable.New()
-    a.de = "Servus"
-    a.en = "HI"
-    a:german()                  // Servus - :-Notation passes self as parameter
-    a:english()                 // HI
-
-
-
-
-
-first-class functions + tables ~ objects
-syntactical sugar for methods - handles self
-
-a:foo(x) => a.foo(a,x)
-
-    function a:foo(x)
-        ...
+    LanguageTable.mt.__eq = function(lt1, lt2) // __eq stands for operator Equals
+       return lt1.de == lt2.de and lt1.en == lt2.en
     end
+     LanguageTable.mt.__index = LanguageTable   // allows to call functions from super.
 
-=>
+Lets have a look on the example before showing it how it is used. In the _New/Constructor_-Function now it appears a
+_setmetatable_-Function which came with Lua and assign that table to a new created table which we return. That is used
+by overloading the operations during the ____-Notation of _equals_ and _index_. During equals is a kind of boring,
+because is is a simple equals implementation, _index_ is very interesting it shows how _super()_ from other languages
+is included. _index = LanguageTable_ sad, should there be no value in the current object, take value from _LanguageTable_.
 
-    a.foo = function(self,x)
-        ...
-    end
+ a = LanguageTable.New()
+ a.de = "Servus"
+ a.en = "HI"
+ a:german()                  // Servus - :-Notation passes self as parameter
+ a:english()                 // HI
+ b = LanguageTable.New()
+ b.de = "Hallo"
+ b.en = "Hello"
+ print(a == b)              // false
+ c = LanguageTable.New()
+ c.de = "Hallo"
+ c.en = "Hello"
+ print(b == c)              // true
 
-Lua doesn´t need Interfaces in the usual meaning. An interface says that an Object which includes an Interface has specific
-functions, methods or properties. But in Lua there are no Objects like in Java. But OO Programming way is possible if
-functions and tables are seen as an Object
+The usage shows a few little differences. With the _:_-Notation there is no need to pass the table into the function.
+The Equals operator works now for tables. And _index_ allows to call _german_ and _english_ from the template table.
 
-*Go*
+There is still a lot to say about tables in Lua but for this article it is enough.
 
-interfaces vai
-
-    type x interface{
-    }
 === More Characteristics of Lua and Go
 
 === Importing Modules
@@ -683,20 +672,19 @@ embaddable lightweight dynamic script language and does a good job for that appr
 server language, optimized for the challenges of this discipline. It is lightweight static fast to compile
 multi-threading concurrent language.
 
-== CHEAT Sheet
-
-https://powerman.name/doc/asciidoc
-
-== Talk about LUA Functions
-https://www.youtube.com/watch?v=wdRGOE1N-FA
-https://pragprog.com/magazines/2013-05/a-functional-introduction-to-lua
-https://www.lua.org/pil/6.html
-
-Quellen
+= Bibliography
+== Web
 https://www.lua.org
 https://www.youtube.com/watch?v=wdRGOE1N-FA (Talk von LUA in Moskau by Roberto Ierusalimschy)
-http://vschart.com/compare/lua/vs/go-language
-Programming in Lua by Roberto Ierusalimschy, Lua.org, December 2003
-The Go Programming Language Donovan, Kernighan
-Lecture of Johannes Weigend at Technical University of Applied Sciences Rosenheim (There i stole a lot of the go part)
 https://www.youtube.com/watch?v=f6kdp27TYZs&feature=youtu.be&t=1 (Rob Pike Google I/0 2012 - Go Concurrency Patterns)
+https://pragprog.com/magazines/2013-05/a-functional-introduction-to-lua
+http://vschart.com/compare/lua/vs/go-language
+
+== Books
+The Go Programming Language Donovan, Kernighan
+Programming in Lua by Roberto Ierusalimschy, Lua.org, December 2003
+
+== Lecture
+Johannes Weigend at Technical University of Applied Sciences Rosenheim (There i stole a lot of the Go stuff)
+
+by Dominik Ampletzer
