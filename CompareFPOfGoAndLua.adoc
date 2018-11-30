@@ -259,63 +259,82 @@ could reused for what the developer needs not for what it is declared. Code can 
 the developer know which types he uses if he even cares . Anonymous functions are called in an explicit context where
 the types are known.  So why should there be types defined? There is only one way to use and it´s absolute clear!
 
-== More Characteristics
+== Objects in Lua (Go Objects will discussed in other articles)
 
-=== Importing Modules
+Objects in Lua are called _Tables_. They are a kind of associative array. These array store different kinds of values.
+That values can be indexed by number or string. Tables have no fixed size known from other languages and could grow
+dynamically during runtime. Take a look of how _Tables_ could look:
 
-In Lua the creators say with a smily maybe the import is maybe to dynamic. The linking to the "math"-library is
-never be checked. During execution it is there or the program throws an error.
+    TableA = { 1, "One", boolean}
+    print(TableA[2])                                    // One - Lua starts to index by 1
+    TableB = { first = "ONE", second= 2 , third = false}
+    print(TableA["second"])                             // 2
+    TableC = {first = 1, second = 2, 3}
+    print(TableC["first"}, TableC.second, TableC[1])    // 1 2 3 - Because 3 is the first none named value!!!
 
-    local m = require "math"
-    print(m.sqrt(10))
+This data structure will be used for every structure in Lua like ordinary arrays, symbol tables, sets, records and queues.
 
-Go has static linking. Special is that the whole Path the the imported Package/Library has to be written. If the
-developer uses a state of the art IDE, that IDE handles imports for the Developer so he hasn´t to care.
+Tables in Lua are neither values nor variables, they are objects. As such there are no hidden copies or creation of new
+tables behinde the scenes, the program manipulates tables by references.
 
-    import "fmt"
-    fmt.println("Hello World")
+If there is the need for a new table you can just create it like in the example above. There is no need for constructor.
 
-=== Pointers / References / Call By Value
+To get the same behaviour as for object or classes in other languages the tables has to be extended with first-class
+functions. That could be done in several ways like:
 
-*Lua* don´t offer Pointers (of course internal it uses references to memory) depending on the data-type there were
-reference or values copied. Lua handles allocation and deallocation of strings and other objects.
+    LanguageTable = {
+        de = "", en = "",
+        New = function()
+            helloT = {}
+            for k, v in pairs(HelloTable) do
+                helloT[k] = v
+            end
+            return helloT
+        end,
+        german = function(param)
+            print(param.de)
+        end,
+        english = function(param)
+            print(param.en)
+        end
+    }
+    a = LanguageTable.New()
+    a.de = "Servus"
+    a.en = "HI"
+    a.german(a)                  // Servus
+    a.english(a)                 // HI
 
-Or more simple all types are passed by value, but function, table, userdata and thread are reference types. An
-exception is String it is immutable and will handled as a reference to a new created string. So it has same behaves
-like a value type, but with better performance. (i have no idea why better performance)
+or more syntactical sugar and more functionality with metatable
 
-*Go* offer Pointer and all functionality which came with that opportunity.
+ LanguageTable = {
+        de = "", en = "",
+        metaTable = {},
+        New = function()
+            helloT = {}
+            setmetatable(helloT, LanguageTable.metaTable)   // setmetatable come from lua
+            helloT.de = LanguageTable.de
+            helloT.en = LanguageTable.en
+            helloT.german = LanguageTable.german
+            helloT.english = LanguageTable.english
+            helloT.metaTable = LanguageTable.metaTable
+            return helloT
+        end,
+        german = function(self) // convention
+            print(self.de)
+        end,
+        english = function(self)
+            print(self.en)
+        end
+    }
+    a = LanguageTable.New()
+    a.de = "Servus"
+    a.en = "HI"
+    a:german()                  // Servus - :-Notation passes self as parameter
+    a:english()                 // HI
 
 
-== TBD - bin mir nicht sicher, ob ich generic for sowie interfaces & Objects reinnehmen soll. is evtl was für OO
 
-=== generic for gehört zu interessanten functions constructen. dran denken pairs () liefert auch eine Funktion kein array is eine function
- for k, v in pairs(t) do
-    print(k, v)
- end
 
- for <var-list> in <exp-list> do
-      <body>
-  end
-
-https://www.lua.org/pil/7.1.html
-
-=== Interfaces?? / Objects - TBD - bin mir nicht sicher, ob ich generic for sowie interfaces & Objects reinnehmen soll. is evtl was für OO
-
-The table type implements associative arrays. An associative array is an array that can be indexed not only with numbers,
- but also with strings or any other value of the language, except nil. Moreover, tables have no fixed size; you can add
- as many elements as you want to a table dynamically. Tables are the main (in fact, the only) data structuring mechanism
-  in Lua, and a powerful one. We use tables to represent ordinary arrays, symbol tables, sets, records, queues, and
-  other data structures, in a simple, uniform, and efficient way. Lua uses tables to represent packages as well. When we
-   write io.read, we mean "the read entry from the io package". For Lua, that means "index the table io using the string
-    "read" as the key".
-
-Tables in Lua are neither values nor variables; they are objects. If you are familiar with arrays in Java or Scheme,
-then you have a fair idea of what we mean. However, if your idea of an array comes from C or Pascal, you have to open
-your mind a bit. You may think of a table as a dynamically allocated object; your program only manipulates references
-(or pointers) to them. There are no hidden copies or creation of new tables behind the scenes. Moreover, you do not have
- to declare a table in Lua; in fact, there is no way to declare one. You create tables by means of a constructor
-  expression, which in its simplest form is written as {}:
 
 first-class functions + tables ~ objects
 syntactical sugar for methods - handles self
@@ -342,6 +361,32 @@ interfaces vai
 
     type x interface{
     }
+=== More Characteristics of Lua and Go
+
+=== Importing Modules
+
+In Lua the creators say with a smily maybe the import is maybe to dynamic. The linking to the "math"-library is
+never be checked. During execution it is there or the program throws an error.
+
+    local m = require "math"
+    print(m.sqrt(10))
+
+Go has static linking. Special is that the whole Path the the imported Package/Library has to be written. If the
+developer uses a state of the art IDE, that IDE handles imports for the Developer so he hasn´t to care.
+
+    import "fmt"
+    fmt.println("Hello World")
+
+=== Pointers / References / Call By Value
+
+*Lua* don´t offer Pointers (of course internal it uses references to memory) depending on the data-type there were
+reference or values copied. Lua handles allocation and deallocation of strings and other objects.
+
+Or more simple all types are passed by value, but function, table, userdata and thread are reference types. An
+exception is String it is immutable and will handled as a reference to a new created string. So it has same behaves
+like a value type, but with better performance. (i have no idea why better performance)
+
+*Go* offer Pointer and all functionality which came with that opportunity.
 
 == Functions
 
@@ -498,7 +543,7 @@ behaviour, as an additional return value. This is a better approach and has bett
 function into a _pcall_. The Panic mechanism allows depending of the developers intention to recover the program. Do not
  forget sometimes it is the right response to panic and maybe break the program.
 
-== Routinen vs Coroutines or Async and Threading -- nochnmal überpüfen eventloop ansatz - wie in gui nicht hochskalierbar aber nicht komnplex
+== Routinen vs Coroutines or Async and Threading
 
 *Lua* offers coroutine which are similar to a the well known thread (in the sense of multithreading): a line of execution,
 with its own stack, its own local variables, and its own instruction pointer; but sharing global variables and
@@ -567,6 +612,10 @@ Coroutines are a kind of collaborative multithreading. There a not constructed a
 While a coroutine is running, it cannot be stopped from the outside! However, with non-preemptive multithreading,
 whenever any thread calls a blocking operation, the whole program blocks until the operation completes.
 
+For several applications this is not a problem, even better, it´s much easier. Developers have not to worry about
+lock or unlock functions/variables. There can´t be synchronization bugs among threads. The only thing developers have to
+care is to _yield_ and _resume_ coroutines to prevent deadlocks or let coroutines wait till the end of time.
+
 *Go* on follows totally other concepts of async and threading. Go supports multithreading in form of Goroutines which
 are very light and multiplext. This means a Goroutine could be executed on several OS threads. This concept offers the
 opportunity to use all cores of a machine. This Goroutines in common do not use blocking. It is possible but unusual.
@@ -629,11 +678,10 @@ the same as usual _switch_-statements only for sequential Goroutine handling. An
 
 = Summary
 
-It´s hard to compare *Lua* and *Go*. Because *Lua* is made as an embaddable lightweight  dynamic script language, while
-*Go* as cloud programming language, optimized for the challenges of this discipline. It is lightweight static fast to
-compile multi-threading concurrent language. But both languages are very interesting and both have exciting concepts.
-
-Hier nochmal SUMMaRY welche Sprachen für was zu benutzen sind!!
+Best to see in the _Goroutine vs Coroutine_ chapter. *Lua* and *Go* are made for different usage. *Lua* is made as an
+embaddable lightweight dynamic script language and does a good job for that approaches. While *Go* as cloud programming
+server language, optimized for the challenges of this discipline. It is lightweight static fast to compile
+multi-threading concurrent language.
 
 == CHEAT Sheet
 
