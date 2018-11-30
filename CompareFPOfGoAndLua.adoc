@@ -674,17 +674,17 @@ multi-threading concurrent language.
 
 = Bibliography
 == Web
-https://www.lua.org
-https://www.youtube.com/watch?v=wdRGOE1N-FA (Talk von LUA in Moskau by Roberto Ierusalimschy)
-https://www.youtube.com/watch?v=f6kdp27TYZs&feature=youtu.be&t=1 (Rob Pike Google I/0 2012 - Go Concurrency Patterns)
-https://pragprog.com/magazines/2013-05/a-functional-introduction-to-lua
-http://vschart.com/compare/lua/vs/go-language
+- https://www.lua.org
+- https://www.youtube.com/watch?v=wdRGOE1N-FA (Talk von LUA in Moskau by Roberto Ierusalimschy)
+- https://www.youtube.com/watch?v=f6kdp27TYZs&feature=youtu.be&t=1 (Rob Pike Google I/0 2012 - Go Concurrency Patterns)
+- https://pragprog.com/magazines/2013-05/a-functional-introduction-to-lua
+- http://vschart.com/compare/lua/vs/go-language
 
 == Books
-The Go Programming Language Donovan, Kernighan
-Programming in Lua by Roberto Ierusalimschy, Lua.org, December 2003
+- The Go Programming Language by Donovan, Kernighan
+- Programming in Lua by Roberto Ierusalimschy, Lua.org, December 2003
 
 == Lecture
-Johannes Weigend at Technical University of Applied Sciences Rosenheim (There i stole a lot of the Go stuff)
+- Johannes Weigend at Technical University of Applied Sciences Rosenheim (There i stole a lot of the Go stuff)
 
 by Dominik Ampletzer
