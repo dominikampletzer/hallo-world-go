@@ -4,64 +4,64 @@
 
 == Introduction
 
-This article compares two programming languages - *Lua* and  *Go(lang)*. It covers the most important concepts of these
-two languages.
+This article compares two programming languages - *Lua* and  *Go(lang)*. It covers the most important aspects of these
+two languages:
 
-- It will start with a high overview and what and for which use case the languages was designed
-- Deeper dive into Typing of both
-- Objects in Lua and explain tables
-- Show how functions and Exception handling works
-- Jump into Goroutines and Coroutines, which are made for different use cases
+- High level overview and use case
+- Deeper dive into typing of both languages
+- Objects and explain tables in Lua
+- Functions and exception handling
+- Goroutines and Coroutines
 
 == What is Lua?
 
-Lua is a programming language which was released, designed, implemented and maintained 1993 by PUC-Rio,
-the Pontifical Catholic University of Rio de Janeiro in Brazil. Till version 4 it was under the
-BSD-Licence since Version 5 its under MIT-Licence.
+Lua is a programming language which was designed, implemented and released in 1993 by PUC-Rio,
+the Pontifical Catholic University of Rio de Janeiro in Brazil. Untill version 4 it had been licensed under BSD and
+since Version 5 it is under MIT.
 
-In the first Version Lua was created as a library. During time and further developing it grows to a programming language.
+In the first version Lua was created as a library. Over the time and continuous development it has grown to a real
+programming language.
 
-Lua creators goal is to create a powerful, efficient, lightweight and embeddable scripting language. It based of
-concepts of procedural, object-oriented , functional and data-driven programming, also on data description.
+It´s creators goal was to create a powerful, efficient, lightweight and embeddable scripting language. It is based on
+concepts of procedural, object-oriented , functional and data-driven programming and on data description.
 
-Lua is a very small and embeddable language which is focused on portability, size, scripting and simplicity (Never did
-any creator of a language sad, he or she wants to create a complex and unknowable language :) ). Because of this it has
-a small footprint, is easy to embed in platforms which support a standard C compiler and it is a scripting language it
-is dynamically typed.
+Because of small footprint, is is easy to embed in platforms which support standard C compiler, it is a scripting
+language which is typed dynamically.
 
-It´s easy to create a program written in two languages with Lua. Lua could sean as the glue which holds the hard parts
-of a program ( maybe written in _C_) together.
 
-Currently Lua is *the* leading scripting language in video games. For Example World of Warcraft and Angry Birds use
-Lua. Because of the popularity of Lua it won´s Awards like the _Front Line Award 2011_.
+It´s easy to create a program written in two languages with Lua. Lua can be seen as the glue which holds together the
+hard parts of a program ( which is maybe written in _C_).
+
+Currently Lua is *the* leading scripting language in video games. For example "World of Warcraft" and "Angry Birds" use
+Lua. Because of its popularity Lua has won many awards like the "Front Line Award 2011".
 
 == What is Go(lang)?
 
-Go aka. Golang is a programming language which was created 2009 by Google. The aim of go is not to be an embeddable
-script language like Lua. It is also based on object-oriented and functional programming but these will combined with
-a few new concepts. New only relatively spoken, for some of these concepts from the 70´s. But why use such old stuff?
-In the 70´s that concepts was only theoretical without a use case. That changed with multi core cpu´s, distributed
-computing and the whole cloud stuff :).
+Go respectively Golang is a programming language which was created in 2009 by Google. The purpose of Go is to be a
+system programming language which solve current requirements. It is also based on object-oriented and functional
+programming but combined with some other concepts. Some of those concepts are from the 1970s. But why use such old stuff?
+In the 1970´s these concepts were developed in theory but had no real use case. That changed since multi-core CPUs,
+distributed computing and cloud solutions are widely used nowadays.
 
 With Go Google created a language which should handle the new challenges which came with the big cloud hype and its
 requirements.
 
-These are the requirements Google wanted to meet:
+Google wanted to meet the following requirements:
 
 - Compiled (cross compiler for OS: Mac, Windows, Linux and CPU: ARM, x86 + Amd64)
-- Static type system with runtime support (Reflection, Dynamic Types)
-- Static linker (Single Binary) -> Ideal for Docker containers
-- Focus on fast compile times (the entire Go codebase compiles in <10 seconds)
-- Simple (less keywords like C - 25/32) (what the hack is Simple???)
-- Object-oriented, Functional, Parallel, Modular (vgo) and Versioned
+- Static type system with runtime support (reflection, dynamic types)
+- Static linker (single binary) -> ideal for Docker containers
+- Short compile times (the entire Go codebase compiles in <10 seconds)
+- Simple (less keywords like C - 25/32)
+- Object-oriented, functional, parallel, modular (vgo) and versioned
 
-These concepts was rounded with the concept of Hoare´s CSP (1978) and Dijkstra´s guarded commands (1975). To get rid
-of the heavy concurrent approach of threads and think in this way.
+These requirements were extended with the concept of Hoare´s CSP (1978) and Dijkstra´s guarded commands (1975) in order
+to get rid of a heavy concurrent approach of threads and to think in this way.
 
-That challanges are solved by Go, and it is now part of the cloud native landscape.
+These challenges are solved by Go, and therefore it is now part of the cloud native landscape.
 
 
-== Small Overview/Comparison Go vs Lua
+== Comparison Table Go vs Lua
 
 |===
 |Feature |Go |Lua
@@ -71,8 +71,8 @@ That challanges are solved by Go, and it is now part of the cloud native landsca
 |Yes
 
 |Target audience
-|Cloud computing, Web Development, App developer, Distributed Systems, Embedded system, Systems Programming
-|Embedded system, Game developer industry
+|Cloud computing, Web Development, App Development, Distributed Systems, Embedded system, Systems Programming
+|Embedded system, Game Development industry
 
 |Release Date
 |2009
@@ -107,7 +107,7 @@ That challanges are solved by Go, and it is now part of the cloud native landsca
 |Privacy by Local Variables or keep Objects/Tables in Closure
 
 |Objects
-|By Embedding and by interfaces
+|By embedding and by interfaces
 |Tables
 
 |Interfaces
@@ -126,10 +126,9 @@ That challanges are solved by Go, and it is now part of the cloud native landsca
 
 == Typing
 
-One of the biggest differences between Lua an Go is typing. Lua is a dynamic types scripting language and Go on the
-other hand is a simplified static typed language. Both concepts has it´s pros and cons and won´t discussed in this
-article (These should be done of fanboys on conventions, talks and papers). These article shows a high look on the
-concepts and how it is done in the languages.
+One of the biggest difference between Lua and Go is their typing. Lua is a dynamic typed scripting language and Go on
+the other hand is a simplified static typed language. Both concepts have their pros and cons which will not be discussed
+in this article. This article shows a high level overview about the concepts and how things are done in the 2 languages.
 
 === Assigning Variables
 
@@ -138,20 +137,20 @@ Lua and Go allows multi assignment like:
     a,b = 1,2   // Lua
     a,b := 1,2  // Go - uses ':=' to declare and set values
 
-Very interesting on this example is that Go *knows* the type of the variable by declaring it with a value. This could
-also be done explicit by:
+Very interesting in this example is that Go *knows* the type of the variable by declaring it with a value. This could
+also be done explicitly by:
 
     a int
     a = 1
 
-but is is still static.
+but its still static.
 
 
 Multi assignment allows funny things like to swap without a swap function
 
     a,b = b,a
 
-or to receive multiple return values of a function without complicate handling (Exception Handling)
+or to receive multiple return values of a function without complication handling (Exception Handling)
 
     result, error = f()   // Lua
     result, error := f()  // Go
@@ -159,28 +158,28 @@ or to receive multiple return values of a function without complicate handling (
 
 === Dynamic Typing - Lua
 
-Languages with dynamic typing check the type during runtime. This means it is not important or the programmer has to
-care about which variable holds which type. It could be said a variable could handle values of different types
-(of course not in the same time but in the variable lifecycle). In the next example it will be clearer:
+Languages with dynamic typing check the type during runtime. This means it is not important or the programmer does not
+have to care about which variable holds which type. A variable can handle values of different types (at different times).
+The following example makes this clear:
 
     a = 1
-    a = "eins"
+    a = "one"
     a = f()
     ...
 
-There is no need for casting to get an int into a double/float or what ever. Sounds nice. But there is a lot for the
-programmer to do, if he wants build a stable program. He has to check his variable during input, handling and output.
-He or she can´t be sure is that variable really numeric value or only a string, which only looks numeric. Even worse if
-you add to an int an object because in both variable was an int but during runtime it was overridden by any object or
-what ever.
+There is no need for casting to get an int into a double/float or somewhere else. But there is a lot to do for the
+programmer, if he wants build a stable program. He has to check his variable during input, handling and output. He can´t
+be sure if the variable is a real numeric value or only a string, which only looks numeric. Even worse if
+you add to an int an object because in both variable was an int at program beginning. But during runtime one was
+overridden by any object.
 
-On the other hand if you know there are only correct types and variables, it is very easy to handle them. The casting
-operation always works correct if needed, the code looks very clean, and one can handle different types the same way.
+On the other hand, if you know there are only correct types and variables, it is very easy to handle them. The casting
+operation always works correct, the code looks very clean, and one can handle different types the same way.
 
 === Static Typing - Go
 
-For *Go* is it very important to have static typing with a lot of syntactic sugar.  In Go one can’t assign to a variable
-in different types (Why should someone do that? Its much easier to create a new variable).
+For *Go* is it very important to have static typing with a lot of syntactic sugar.  In Go one can’t assign different
+types to a variable.
 
     a := 1      // a will declared as a variable from the type integer an gets the value
 
@@ -190,11 +189,11 @@ in different types (Why should someone do that? Its much easier to create a new 
 
     a = "one" // will occur a panic Type Error
 
-These concept makes it very easy for developers to know which values he or she needs for calling functions or handle
-return values. Because every time it is totally clear which variables, params or return values has to be handled.
+This concept makes it very easy for developers to know which values he or she needs for calling functions or handling
+return values because at all times it is clear which variables, parameters or return values have to be handled.
 
-Of course static typing have problems or ugly sides. Should there be an Array of Objects and it is totally clear that
-only Integer values are in it you have to cast them explicitly.
+Of course static typing has problems and ugly sides. If there is an array of objects and If it is clear that only
+integer values are in it, they have to be casted explicitly.
 
     arr_1 := []any{2, 3, 4}
     a ;= 1
@@ -203,11 +202,11 @@ only Integer values are in it you have to cast them explicitly.
     arr_2 := []int{1, 2, 3}
     b := 2 + arr_2[0]
 
-Another important thing to say is that if one declares variables one must also declare the type. It´s not a big deal,
-but it´s good to know and a kind of syntactic sugar.
+Another important aspect is that if one declares variables one must also declare the type. This is not a big deal,
+but it´s good to know and kind of syntactic sugar.
 
-The static approach has also effects on functions. The parameters can only be declared with types. Because of this,
-should the parameter not be clear during creating the function or to use in several ways you have to cast explicit like:
+The static approach has also effects on functions. The parameters can only be declared with types. If the parameters are
+not be clear while creating the function or used in several ways, one has to cast explicitly like:
 
     func foo (a string, b int) string{
         return "Some Value"
@@ -224,16 +223,16 @@ should the parameter not be clear during creating the function or to use in seve
     result = foo_2("Some", 2).(string)
 
 
-The example shows that the function params could only be string for _a_ and an integer for _b_. _foo_ must return a
-string. In the second function you have to cast the params and return value to fit the correct type. Main benefit is
-that the developer can easily see the correct type and use it in the correct way. IDE´s and at last the compiler are
-able to find type errors. In worst case function _foo_2_ could still occur an type error during runtime. Go allows type
-save casts but if it will cast in the wrong type an error occur.
+The example shows that the function params can only be a string for _a_ and an integer for _b_. _foo_ must return a
+string. In the second function, one has to cast the params and return a value to fit the correct type. The main benefit
+is that the developer can easily see the correct type and use it in the correct way. IDE´s and finally the compiler are
+able to find type errors. In the worst case, in function _foo_2_ still a type error occurs during runtime. Go allows type
+save casts but if it´s cast in the wrong type an error occurs.
 
-Static typing helps developer to prevent errors. But if it helps to understand the code and supports, readability depend
-on the developer who uses it.
+Static typing helps developers to prevent errors. Readability and understanding of the code depends on the developer who
+uses it.
 
-Let’s take a look on Lua functions to see how it will look there:
+Let’s take a look on Lua functions to see how it looks there:
 
     function foo (n)
         n = n or 1
@@ -241,28 +240,28 @@ Let’s take a look on Lua functions to see how it will look there:
         return n
     end
 
-Without saying which concept is better, dynamic or static could you answer following questions?
+Without saying which concept is better (dynamic or static), can you answer the following questions?
 
-- Which type has the parameter? Or how should _foo_ be called?
-- Will you return something? And which type will it have?
+- Which type has the parameter? How should _foo_ be called?
+- Will you return something? Which type will it have?
 - Must the parameter be set?
 
-That’s not really fair. There still exists documentation and the function parameter naming could show if it’s needed and
-which type is to use. But you don´t have compiler or IDE support for this kind of typing.
+There still exists documentation and the function parameter naming shows if it’s needed and which type has to be used,
+but there is no compiler or IDE support for this kind of typing.
 
-Should foo be called like _foo("abc")_ it will occur an invalid-type-exception during runtime and in the worst case the
+If foo is called like _foo("abc")_, an invalid-type-exception will occur during runtime and in the worst case the
 program will break.
 
-One of the benefits of dynamic typing is it is much easier to write, you don´t care about explicit typing and variables
-could reused for what the developer needs not for what it is declared. Code can be much smaller and during developing
-the developer know which types he uses if he even cares . Anonymous functions are called in an explicit context where
-the types are known.  So why should there be types defined? There is only one way to use and it´s absolute clear!
+One of the benefits of dynamic typing is that it is much easier to write, one doesn´t have to care about explicit typing
+and variables can be reused for multiple purposes. Code can be much smaller and during development the developer knows
+which types he uses. Anonymous functions are called in an explicit context where the types are known. Why types be
+defined? There is only one way to use them and it´s absolutely clear!
 
-== Objects in Lua (Go Objects will discussed in other articles)
+== Objects in Lua (Go Objects will be discussed in other articles)
 
-Objects in Lua are called _Tables_. They are a kind of associative array. These array store different kinds of values.
-That values can be indexed by number or string. Tables have no fixed size known from other languages and could grow
-dynamically during runtime. Take a look of how _Tables_ could look:
+Objects in Lua are called _Tables_. They are kind of associative arrays. These arrays store different kinds of values.
+These values can be indexed by number or string. Tables have no fixed size as known from other languages and can grow
+dynamically during runtime. Take a look at how _Tables_ can look like:
 
     TableA = { 1, "One", boolean}
     print(TableA[2])                                    // One - Lua starts to index by 1
@@ -273,13 +272,13 @@ dynamically during runtime. Take a look of how _Tables_ could look:
 
 This data structure will be used for every structure in Lua like ordinary arrays, symbol tables, sets, records and queues.
 
-Tables in Lua are neither values nor variables, they are objects. As such there are no hidden copies or creation of new
-tables behinde the scenes, the program manipulates tables by references.
+Tables in Lua are neither values nor variables, they are objects. As such there are no hidden copies or new tables
+created behind the scenes, the program manipulates tables by references.
 
-If there is the need for a new table you can just create it like in the example above. There is no need for constructor.
+If there is the need for a new table, one can just create it like in the example above. There is no need for a constructor.
 
-To get the same behaviour as for object or classes in other languages the tables has to be extended with first-class
-functions. That could be done in several ways like:
+To get the same behavior as for objects or classes in other languages the tables has to be extended with first-class
+functions. That can be done in several ways like:
 
     LanguageTable = {
         de = "", en = "",
@@ -303,7 +302,7 @@ functions. That could be done in several ways like:
     a.german(a)                  // Servus
     a.english(a)                 // HI
 
-or with more syntactical sugar and more functionality like metatable
+or with more syntactical sugar and more functionality like a meta table
 
     LanguageTable = {
         de = "", en = "",
@@ -325,11 +324,11 @@ or with more syntactical sugar and more functionality like metatable
     end
      LanguageTable.mt.__index = LanguageTable   // allows to call functions from super.
 
-Lets have a look on the example before showing it how it is used. In the _New/Constructor_-Function now it appears a
-_setmetatable_-Function which came with Lua and assign that table to a new created table which we return. That is used
-by overloading the operations during the ____-Notation of _equals_ and _index_. During equals is a kind of boring,
-because is is a simple equals implementation, _index_ is very interesting it shows how _super()_ from other languages
-is included. _index = LanguageTable_ sad, should there be no value in the current object, take value from _LanguageTable_.
+Let´s have a look on the example before showing us how it is used. In the _New/Constructor_-Function a
+_setmetatable_-Function (which came with Lua) appears and assigns the table to a newly created table which we return.
+That is used by overloading the operations during the ____-Notation of _equals_ and _index_. During equals it is,
+because it is a simple equals implementation, _index_ is very interesting because it shows how _super()_ from other languages
+is included. _index = LanguageTable_ says, should there be no value in the current object, take value from _LanguageTable_.
 
  a = LanguageTable.New()
  a.de = "Servus"
@@ -346,36 +345,37 @@ is included. _index = LanguageTable_ sad, should there be no value in the curren
  print(b == c)              // true
 
 The usage shows a few little differences. With the _:_-Notation there is no need to pass the table into the function.
-The Equals operator works now for tables. And _index_ allows to call _german_ and _english_ from the template table.
+The Equals operator now works for tables. And _index_ allows to call _german_ and _english_ from the template table.
 
-There is still a lot to say about tables in Lua but for this article it is enough.
+There is still a lot to say about tables in Lua but for this article it is sufficient.
 
 === More Characteristics of Lua and Go
 
 === Importing Modules
 
-In Lua the creators say with a smily maybe the import is maybe to dynamic. The linking to the "math"-library is
-never be checked. During execution it is there or the program throws an error.
+In Lua the creators say with a smile that the import is maybe to dynamic. The linking to the "math"-library is
+never checked. During execution it is there or the program throws an error:
 
     local m = require "math"
     print(m.sqrt(10))
 
-Go has static linking. Special is that the whole Path the the imported Package/Library has to be written. If the
-developer uses a state of the art IDE, that IDE handles imports for the Developer so he hasn´t to care.
+Go has static linking. Special is that the whole Path to the imported Package/Library has to be written. If the
+developer uses a state of the art IDE in which, IDE handles the imports for the Developer, then he doesn´t have to care
+about it.
 
     import "fmt"
     fmt.println("Hello World")
 
 === Pointers / References / Call By Value
 
-*Lua* don´t offer Pointers (of course internal it uses references to memory) depending on the data-type there were
-reference or values copied. Lua handles allocation and deallocation of strings and other objects.
+*Lua* doesn´t offer Pointers (of course internally it uses references to memory) depending on the data-type where
+references or values are copied. Lua handles allocation and deallocation of strings and other objects.
 
-Or more simple all types are passed by value, but function, table, userdata and thread are reference types. An
-exception is String it is immutable and will handled as a reference to a new created string. So it has same behaves
-like a value type, but with better performance. (i have no idea why better performance)
+Or more simple: All types are passed by value, but functions, tables, userdata and threads are reference types. An
+exception is String which is immutable and will be handled as a reference to a newly created string. So it has same
+behaviors like a value type, but with better performance.
 
-*Go* offer Pointer and all functionality which came with that opportunity.
+*Go* offers Pointers and all functionality which come with this opportunity.
 
 == Functions
 
