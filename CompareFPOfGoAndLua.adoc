@@ -383,9 +383,9 @@ Now the basics are clear. Let’s take a deeper dive into the functions of both 
 
 === Scope
 
-*Lua* uses lexical scoping this means unlike global variables, local variables have their scope limited to the block
+*Lua* uses lexical scoping. That means unlike global variables, local variables have their scope limited to the block
 where they are declared. A block is the body of a control structure, the body of a function or a chunk (the file or
-string with the code where the variable is declared). That´s the same for functions, so we could create typical closures
+string with the code where the variable is declared). It´s the same for functions, so we can create typical closures
 like:
 
     function sequence ()
@@ -396,8 +396,8 @@ like:
         end
     end
 
-*Go* has nearly the same behaviour except global variables, Go doesn´t contain them. The scoping of Go is called lexical
-blocks, which means the same as Lua´s lexical scope. The syntactic block is a sequence of statements enclosed in braces
+*Go* has nearly the same behavior except global variables, Go doesn´t contain them. The scoping of Go is called lexical
+blocks, which is similar to Lua´s lexical scope. The syntactic block is a sequence of statements enclosed in braces
 that surround the body of a function or loop. There is a lexical scope for the entire source code, called the universal
 scope: For each package, file, function, loop, switch, switch-case, select and of course for each lexical scope. Imports
 are in the file level scope. Closures in Go look nearly the same as in Lua:
@@ -410,8 +410,8 @@ are in the file level scope. Closures in Go look nearly the same as in Lua:
     	}
     }
 
-As we can see  both can handle closures and functions as first class values/citizens. Which means you can treat
-functions as values. Functions could be function parameter, return values (higher-order functions) or stored in variables.
+As we can see  both can handle closures and functions as first class values/citizens which means you can treat
+functions as values. Functions can be function parameters, return values (higher-order functions) or stored in variables.
 
 === Function Nesting
 
@@ -460,7 +460,7 @@ This is a simple map implementation that only works with one array. But it works
 
     return table.concat(map(double, {1,2,3}),",") // 2,4,6
 
-Its very funny that *Go* same as Lua does not include a map function. So to compare code it ourselves.
+Its very funny that *Go* as well as Lua don´t include a map function. Therefore, we compare the code ourselves:
 
     func Map(foo func(interface{}) interface{}, arr []interface{}) interface{} {
     	temp := new([]interface{})
@@ -470,9 +470,9 @@ Its very funny that *Go* same as Lua does not include a map function. So to comp
     	return temp
     }
 
-In the Go example there is to see that interface{} is very often used to use Map with every type. That looks very ugly
+In the Go example interface{} is used very often in order to use Map with every type. It looks very ugly
 and does not support the developer in how the function should be used. To use it more explicit and with the common
-_Object.Function()_-Notation for using functions on Objects Map could written for a type explicit.
+_Object.Function()_-Notation, functions on Objects Map can be written for an explicit type.
 
     func (s *SomeType) Map(mapperFunction AnyInterface) SomeReturnValue {
     	for i, el := range s.data {
@@ -485,9 +485,9 @@ _Object.Function()_-Notation for using functions on Objects Map could written fo
 
 == Exception handling
 
-*Lua* uses function nesting for its error handling. The _pcall_-Function (Protacted Call) tooks a function as parameter
-and calls that function. _pcall_ returns two values a ok-Value should all be ok :) and a second value with the error
-message should during calling the function an error occur. This is a very good example how function nesting and multi
+*Lua* uses function nesting for its error handling. The _pcall_-Function (Protacted Call) takes a function as parameter
+and calls that function. _pcall_ returns two values, an ok-Value in case all is ok :) and a second value with the error
+message should an error occur during calling the function . This is a very good example how function nesting and multi
 assignment work.
 
     local ok, err = pcall(function() <block/error> end)
@@ -495,22 +495,22 @@ assignment work.
         print(err) // error handling
     end
 
-Simple semantic you need only 2 functions – this shows that functional programming is a major part of Lua.
+For simple semantic one only needs 2 functions – this shows that functional programming is a major part of Lua.
 
-For *Go* its nearly the same. For functions which it is usual to intend an error, like http calls, that function has to
-return an error by design in error case. So there is no need wrapping functions into a _pcall_ like:
+For *Go* its nearly the same. For functions which are intended to return an error, like http calls, that function has to
+return an error by design in case of an error. Therefore there is no need for wrapping functions into a _pcall_ like:
 
     ok, err := http.Get(url)
     if err != nil {
         fmt.println(err) // error handling
     }
 
-this example shows a common case in which the program should not crash. we only need to handle the
-error, maybe across calling the Get again or what ever.
+this example shows a common case in which the program should not crash. We only need to handle the
+error, maybe across calling the Get again or something else.
 
-The second handling strategy is for unexpected error the _panic_-Function which is reserved for _wrong_ states and
-behaviour of the program. _Panic_ could be cached to maybe cleanup a Webserver, write into a logfile, stop the
-program more controlled or maybe recover.
+The second handling strategy is for unexpected errors the _panic_-Function which is reserved for _wrong_ states and
+behaviour of the program. _Panic_ can be cached to cleanup a Webserver, to write into a logfile, to stop the
+program more controlled or maybe to recover.
 
 Panics could be thrown very easy.
 
@@ -528,20 +528,20 @@ and similar simple cached
     }
 
 *Go* includes by design the _pcall_ from Lua. But the _pcall_ needs to be built into the functions as an expected
-behaviour, as an additional return value. This is a better approach and has better performance wrapping every unsafe
-function into a _pcall_. The Panic mechanism allows depending of the developers intention to recover the program. Do not
- forget sometimes it is the right response to panic and maybe break the program.
+behavior, as an additional return value. This is a better approach and has better performance wrapping every unsafe
+function into a _pcall_. The Panic mechanism allows (depending of the developers intention) to recover the program. Do
+not forget that sometimes it is the right response to panic and maybe break the program.
 
-== Routinen vs Coroutines or Async and Threading
+== Goroutines vs Coroutines or Async and Threading
 
-*Lua* offers coroutine which are similar to a the well known thread (in the sense of multithreading): a line of execution,
+*Lua* offers coroutine which are similar to the well known thread (in the sense of multithreading): a line of execution,
 with its own stack, its own local variables, and its own instruction pointer; but sharing global variables and
 mostly anything else with other coroutines. The main difference between threads and coroutines is that, conceptually
 (or literally, in a multiprocessor machine), a program with threads runs several threads concurrently. Coroutines, on
 the other hand, are collaborative: A program with coroutines is, at any given time, running only one of its coroutines
 and this running coroutine only suspends its execution when it explicitly requests to be suspended.
 
-A coroutine has 3 states: _suspended_, _running_, _dead_. It could be stored in variables and coroutines has
+A coroutine has 3 states: _suspended_, _running_, _dead_. It can be stored in variables and coroutines has
 functionality to get its state, close, yield and creating them.
 
     co = coroutine.create(function ()
@@ -559,11 +559,11 @@ If the status will be checked it returns the _suspended_-state.
 
     print(coroutine.status(co))   --> suspended
 
-This can be done till the for-loop is ending. Then the state of the coroutine will change to dead. It can no longer be
+This can be done until the for-loop is ending. Then the state of the coroutine will change to dead. It can no longer be
 called without an exception.
 
-For example downloading different files using http. It could be downloaded in sequence (tooks a long time)
-or is there currently no data available the coroutines could yield and another coroutine could run and so own.
+For example downloading different files using http. It can be downloaded in sequence (take a long time)
+or if there is currently no data available the coroutines can yield and another coroutine can run and so on.
 
  function download (host, file)
       local c = assert(socket.connect(host, 80))// creates connection
@@ -597,23 +597,23 @@ The next function ensures that each download runs in an individual thread:
       table.insert(threads, co)                 // insert into list
     end
 
-Coroutines are a kind of collaborative multithreading. There a not constructed as real multithreading like Goroutines.
+Coroutines are a kind of collaborative multithreading. They are not constructed as real multithreading like Goroutines.
 While a coroutine is running, it cannot be stopped from the outside! However, with non-preemptive multithreading,
 whenever any thread calls a blocking operation, the whole program blocks until the operation completes.
 
-For several applications this is not a problem, even better, it´s much easier. Developers have not to worry about
+For several applications this is not a problem, even better, it´s much easier. Developers have not to worry about to
 lock or unlock functions/variables. There can´t be synchronization bugs among threads. The only thing developers have to
-care is to _yield_ and _resume_ coroutines to prevent deadlocks or let coroutines wait till the end of time.
+care about is to _yield_ and _resume_ coroutines to prevent deadlocks or to let coroutines wait until the end of time.
 
-*Go* on follows totally other concepts of async and threading. Go supports multithreading in form of Goroutines which
-are very light and multiplext. This means a Goroutine could be executed on several OS threads. This concept offers the
-opportunity to use all cores of a machine. This Goroutines in common do not use blocking. It is possible but unusual.
+*Go* follows totally other concepts of async and threading. Go supports multithreading in form of Goroutines which
+are very light and multiplexed. This means a Goroutine can be executed on several OS threads. This concept offers the
+opportunity to use all cores of a machine. Goroutines in general do not use blocking. It is possible but unusual.
 Goroutines uses communication to pass data from one routine into another. This method is inspired by Hoare´s CSP (1978)
 and Dijkstra´s guarded commands (1975). In these concepts there is no need to share memory or variables to pass data
-between Goroutines, they communicate to handle that. For these Go includes so called channels in which can be written or
+between Goroutines, they communicate to handle that. For that Go includes so called channels through which can be written or
 read. Depending on the use case, with or without buffering. The default channel has no buffer size, so if a Goroutine
-would write into a channel it waits for a receiver on the other side. Similar to that the receiver waits till someone
-writes into the channel. With these simple rules routines can be synchronised.
+would write into a channel it waits for a receiver on the other side. Similar to that the receiver waits until someone
+writes into the channel. With these simple rules routines can be synchronized.
 
     type Ball struct{ hits int }                    // Ball contains the number of hits.
     func main() {
@@ -640,23 +640,23 @@ This example shows a lot. Start with definitions of unusual operators and reserv
 - _go_-command tells the machine that this should be started asynchronously  as an independent Goroutine. (very easy
 syntax)
 -  _some_value_ means to write _some_value_ into the channel
--  a = \<- _some_channel_ tooks the value from a channel
+-  a = \<- _some_channel_ takes the value from a channel
 
 Lets look deeper into the example above.
 
 - In the first line a struct is created which contains the hits (boring)
-- The main-function creats a table which is a channel of Ball-Pointer
-- Than two player-functions will launched. Both get a name and took a channel of Ball-Pointer. And start in a infinite
-loop: wait to read from table, hit the ball, write the hits to the console, wait and write to the table channel.
-- Now the game starts. The first message is written into the table channel (do not forget the two player-functions
+- The main-function creates a table which is a channel of Ball-Pointer
+- Then two player-functions are launched. Both get a name and take a channel of Ball-Pointer. And start in an infinite
+loop: wait to read from the table, hit the ball, write the hits to the console, wait and write to the table channel.
+- Now the game starts: The first message is written into the table channel (do not forget that two player-functions
 are started and waiting for the first message to handle the ball)
 - Wait
-- Take a message from the channel (=> the two players both wait for a message at the table-channel but non will be there)
+- Take a message from the channel (=> the two players both wait for a message at the table-channel but none is there)
 GAME OVER!
 
-It is important to understand is that a Goroutine is not a Thread. It’s much more lighter and does not share variables
+It is important to understand is that a Goroutine is not a Thread. It’s much lighter and does not share variables
 or memory. It passes data using channels. That needs new control structures like the _select_-Statement which is nearly
-the same as usual _switch_-statements only for sequential Goroutine handling. And of course if it is needed Go offers blocking:
+the same as the usual _switch_-statements only for sequential Goroutine handling. And of course, if it is needed Go offers blocking:
 
     var someThing sync.Mutex
     func BlockingExample() {
@@ -667,10 +667,10 @@ the same as usual _switch_-statements only for sequential Goroutine handling. An
 
 = Summary
 
-Best to see in the _Goroutine vs Coroutine_ chapter. *Lua* and *Go* are made for different usage. *Lua* is made as an
-embaddable lightweight dynamic script language and does a good job for that approaches. While *Go* as cloud programming
-server language, optimized for the challenges of this discipline. It is lightweight static fast to compile
-multi-threading concurrent language.
+Best to see in the _Goroutine vs Coroutine_ chapter, *Lua* and *Go* are made for different usage. *Lua* is made as an
+embeddable lightweight dynamic script language and does a good job for such approaches. While *Go* has been designed as
+a cloud programming server language, optimized for the challenges of this discipline. It is lightweight, static and fast
+to compile multi-threading concurrent language.
 
 = Bibliography
 == Web
